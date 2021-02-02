@@ -1,6 +1,5 @@
 name: Deploy JNL to S3 for static hosting
 on: [ push ]
-environment: jnk-ga
 jobs:
   run:
     runs-on: ubuntu-latest
