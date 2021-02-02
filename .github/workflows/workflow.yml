@@ -1,6 +1,5 @@
 name: Deploy JNL to S3 for static hosting
 on: [ push ]
-environment: jnk-ga
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -28,4 +27,4 @@ jobs:
         with:
           folder: ./web/build
           bucket: ${{ secrets.S3_BUCKET }}
-          bucket-region: ${{ secrets.S3_BUCKET_REGION }}
+          bucket-region: ap-southeast-2
