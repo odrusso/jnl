@@ -32,6 +32,14 @@ module.exports = {
                     },
                 ],
             },
+            {
+                test: /\.ttf$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'fonts/'
+                }
+            }
         ],
     },
     devServer: {

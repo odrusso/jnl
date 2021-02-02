@@ -1,0 +1,34 @@
+@font-face {
+    font-family: 'go-bold';
+    src: url('./fonts/Go-Mono-Bold.ttf')
+}
+
+html {
+    margin: 0;
+    background-color: rgb(176, 171, 155);
+    font-family: go-bold, monospace;
+    color: rgb(254, 246, 222);
+}
+
+body {
+    margin: 50px 50px 0;
+}
+
+.header {
+    width: 100%;
+    text-align: right;
+    padding-right: 50px;
+}
+
+.header a {
+    margin-right: 30px;
+}
+
+.header a:any-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.header a:hover {
+    color: white;
+}

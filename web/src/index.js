@@ -1,4 +1,7 @@
 import React from "react";
 import {render} from "react-dom";
+import 'jnl.css'
+import {Home} from "./home";
 
-render(<h3>JNL</h3>, document.getElementById("root"))
+render(<Home />, document.getElementById("root"))
+
