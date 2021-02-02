@@ -3,13 +3,15 @@ import _ from 'lodash'
 
 const randomColor = require('randomcolor');
 
-const possibleGreetings = ["Hope you're okay.", "I miss you.", "How's it hanging?", "Cool green moss."]
+const possibleGreetings = ["Hope you're okay.", "I miss you.", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
 const greeting = _.sample(possibleGreetings)
 
 const storageState = localStorage.getItem('messages')
 let initialMessages = [];
-if (storageState !== undefined) {
+if (storageState !== null) {
     initialMessages = JSON.parse(storageState)
+} else {
+    localStorage.setItem('messages', JSON.stringify([]))
 }
 
 export function App(props) {
