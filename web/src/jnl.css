@@ -18,6 +18,7 @@ body {
     width: 100%;
     text-align: right;
     padding-right: 50px;
+    margin-bottom: 100px;
 }
 
 .header a {
@@ -31,4 +32,16 @@ body {
 
 .header a:hover {
     color: white;
+}
+
+
+.app {
+    background-color: rgb(255, 252, 246);
+    width: 60%;
+    margin: 0 auto;
+    height: 1000px;
+    border-radius: 25px 25px 0 0;
+    padding: 100px 100px 100px;
+    color: rgb(81, 81, 81);
+    box-shadow: 0 10px 50px 5px rgba(0, 0, 0, 0.2);
 }

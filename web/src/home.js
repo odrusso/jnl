@@ -1,10 +1,12 @@
 import React from 'react'
 import {Header} from "./header";
+import {App} from "./app";
 
-export const Home = () => {
+export function Home(props) {
     return (
         <>
             <Header/>
+            <App/>
         </>
     )
 }
