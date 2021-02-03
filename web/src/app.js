@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
+import {randomColor} from 'randomcolor'
 import _ from 'lodash'
-
-const randomColor = require('randomcolor');
 
 const possibleGreetings = ["Hope you're okay.", "I miss you.", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
 const greeting = _.sample(possibleGreetings)
@@ -17,6 +16,7 @@ if (storageState !== null) {
 export function App(props) {
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState(initialMessages)
+    const [colors, setColors] = useState(randomColor({seed: 0, count: messages.length}))
 
     const handleType = (e) => {
         // target.value should be the value of the input
@@ -30,6 +30,7 @@ export function App(props) {
             newMessages = messages.concat([message])
             setMessages(newMessages)
             localStorage.setItem('messages', JSON.stringify(newMessages))
+            setColors(colors.concat([randomColor()]))
         }
         setMessage('')
         e.preventDefault()
@@ -70,7 +71,7 @@ export function App(props) {
                     <br/>
                     {messages.map((it, idx) =>
                         <div key={idx}>
-                            <h2 style={{color: randomColor()}}>{idx + 1}</h2>
+                            <h2 style={{color: colors[idx]}}>{idx + 1}</h2>
                             <p>{it}</p>
                             <hr/>
                             <br/>
