@@ -29,4 +29,4 @@ jobs:
           bucket: ${{ secrets.S3_BUCKET }}
           bucket-region: ap-southeast-2
           dist-id: EGCMBVUN0OYSF
-          invalidation: /
+          invalidation: /*
