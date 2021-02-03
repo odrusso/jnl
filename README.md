@@ -1,4 +1,5 @@
-# jnl
+# jnl 
+![Deploy JNL to S3 for static hosting](https://github.com/odrusso/jnl/workflows/Deploy%20JNL%20to%20S3%20for%20static%20hosting/badge.svg)
 Pragmatic journelling webapp. No servers, no analytics, no tracking.
 
 ## Stack
