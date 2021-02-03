@@ -16,7 +16,7 @@ if (storageState !== null) {
 export function App(props) {
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState(initialMessages)
-    const [colors, setColors] = useState(randomColor({seed: 0, count: messages.length}))
+    const [colors, setColors] = useState(randomColor({seed: 0, luminosity: "dark", count: messages.length}))
 
     const handleType = (e) => {
         // target.value should be the value of the input
@@ -27,10 +27,12 @@ export function App(props) {
         // Appends message to messages
         let newMessages = []
         if (message !== '') {
-            newMessages = messages.concat([message])
+            let now = new Date()
+            let timeString = now.getHours() + ":" + now.getMinutes() + " " + now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear()
+            newMessages = messages.concat([{text: message, date: timeString}])
             setMessages(newMessages)
             localStorage.setItem('messages', JSON.stringify(newMessages))
-            setColors(colors.concat([randomColor()]))
+            setColors(colors.concat([randomColor({luminosity: "dark"})]))
         }
         setMessage('')
         e.preventDefault()
@@ -47,7 +49,7 @@ export function App(props) {
                 <h3>{greeting}</h3>
                 <br/>
                 <br/>
-                <div>
+                <div className={'form-area'}>
                     <form onSubmit={handleSubmit}>
                         <textarea className="form-text" type="text" value={message} onChange={handleType}/>
                         <br/>
@@ -68,13 +70,14 @@ export function App(props) {
                 </div>
 
                 <div>
-                    <br/>
-                    {messages.map((it, idx) =>
-                        <div key={idx}>
-                            <h2 style={{color: colors[idx]}}>{idx + 1}</h2>
-                            <p>{it}</p>
-                            <hr/>
-                            <br/>
+                    {messages.slice().reverse().map((it, idx) =>
+                        <div className={"block"} key={idx}>
+                            <p className={"blockDate"} style={{color: colors[idx]}}>{it.date}</p>
+                            <p className={"blockText"}>
+                                {it.text.split('\n').map((line) =>
+                                    <> {line} <br/> </>
+                                )}
+                            </p>
                         </div>
                     )}
                 </div>

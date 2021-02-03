@@ -4,4 +4,3 @@ import 'jnl.css'
 import {Home} from "./home";
 
 render(<Home />, document.getElementById("root"))
-
