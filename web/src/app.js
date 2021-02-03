@@ -33,7 +33,7 @@ export function App(props) {
         // Appends message to messages
         if (message !== '') {
             let now = new Date()
-            let timeString = now.getHours() + ":" + now.getMinutes() + " " + now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear()
+            let timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`
             let newMessages = messages.concat([{text: message, date: timeString}])
             updateLocalStorage(newMessages)
         }
