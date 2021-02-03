@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {randomColor} from 'randomcolor'
 import _ from 'lodash'
 
-const possibleGreetings = ["Hope you're okay.", "I miss you.", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
+const possibleGreetings = ["Hope you're okay.", "You've got this!", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
 const greeting = _.sample(possibleGreetings)
 
 const storageState = localStorage.getItem('messages')
@@ -23,24 +23,28 @@ export function App(props) {
         setMessage(e.target.value)
     }
 
+    const updateLocalStorage = (newMessages) => {
+        setMessages(newMessages)
+        localStorage.setItem('messages', JSON.stringify(newMessages))
+        setColors(colors.concat([randomColor({luminosity: "dark"})]))
+    }
+
     const handleSubmit = (e) => {
         // Appends message to messages
-        let newMessages = []
         if (message !== '') {
             let now = new Date()
             let timeString = now.getHours() + ":" + now.getMinutes() + " " + now.getDate() + "/" + now.getMonth() + 1 + "/" + now.getFullYear()
-            newMessages = messages.concat([{text: message, date: timeString}])
-            setMessages(newMessages)
-            localStorage.setItem('messages', JSON.stringify(newMessages))
-            setColors(colors.concat([randomColor({luminosity: "dark"})]))
+            let newMessages = messages.concat([{text: message, date: timeString}])
+            updateLocalStorage(newMessages)
         }
         setMessage('')
         e.preventDefault()
     }
 
-    const resetMessages = (e) => {
-        setMessages([])
-        localStorage.setItem('messages', JSON.stringify([]))
+    const removeThisEntry = (idx) => {
+        let newMessages = messages
+        newMessages.splice(idx, 1)
+        updateLocalStorage(newMessages)
     }
 
     return (
@@ -60,11 +64,6 @@ export function App(props) {
                                 <path
                                     d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7 14h-5v5h-4v-5h-5v-4h5v-5h4v5h5v4z"/>
                             </svg>
-                            <svg onClick={resetMessages} xmlns="http://www.w3.org/2000/svg" width="36" height="36"
-                                 viewBox="0 0 36 36">
-                                <path
-                                    d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.151 17.943l-4.143-4.102-4.117 4.159-1.833-1.833 4.104-4.157-4.162-4.119 1.833-1.833 4.155 4.102 4.106-4.16 1.849 1.849-4.1 4.141 4.157 4.104-1.849 1.849z"/>
-                            </svg>
                         </div>
                     </form>
                 </div>
@@ -73,6 +72,8 @@ export function App(props) {
                     {messages.slice().reverse().map((it, idx) =>
                         <div className={"block"} key={idx}>
                             <p className={"blockDate"} style={{color: colors[idx]}}>{it.date}</p>
+                            <i className={"blockRemove"}
+                               onClick={() => removeThisEntry(messages.length - 1 - idx)}>remove </i>
                             <p className={"blockText"}>
                                 {it.text.split('\n').map((line) =>
                                     <> {line} <br/> </>
