@@ -1,5 +1,5 @@
 # jnl
-Pragmatic journelling webapp
+Pragmatic journelling webapp. No servers, no analytics, no tracking.
 
-# Stack
-Running React Native on AWS Amplify.
+## Stack
+React, hosted from S3 behind CloudFront.
