@@ -33,7 +33,7 @@ export function App(props) {
         // Appends message to messages
         if (message !== '') {
             let now = new Date()
-            let timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`
+            let timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`
             let newMessages = messages.concat([{text: message, date: timeString}])
             updateLocalStorage(newMessages)
         }
@@ -62,7 +62,7 @@ export function App(props) {
                             <svg onClick={handleSubmit} xmlns="http://www.w3.org/2000/svg" width="36" height="36"
                                  viewBox="0 0 36 36">
                                 <path
-                                    d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7 14h-5v5h-4v-5h-5v-4h5v-5h4v5h5v4z"/>
+                                    d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.959 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591z"/>
                             </svg>
                         </div>
                     </form>
