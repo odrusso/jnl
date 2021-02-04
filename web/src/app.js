@@ -60,7 +60,7 @@ export function App(props) {
             <div className={"app"}>
                 <h3>{greeting}</h3>
                 <br/>
-                <br/>s
+                <br/>
                 <div className={'form-area'}>
                     <form onSubmit={handleSubmit}>
                         <textarea className="form-text" type="text" value={message} onChange={handleType}/>
