@@ -47,12 +47,20 @@ export function App(props) {
         updateLocalStorage(newMessages)
     }
 
+    const downloadJson = (idx) => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages, null, 2));
+        const dlAnchorElem = document.getElementById('downloadAnchorElem');
+        dlAnchorElem.setAttribute("href",     dataStr     );
+        dlAnchorElem.setAttribute("download", "messages.json");
+        dlAnchorElem.click();
+    }
+
     return (
         <>
             <div className={"app"}>
                 <h3>{greeting}</h3>
                 <br/>
-                <br/>
+                <br/>s
                 <div className={'form-area'}>
                     <form onSubmit={handleSubmit}>
                         <textarea className="form-text" type="text" value={message} onChange={handleType}/>
@@ -82,6 +90,10 @@ export function App(props) {
                         </div>
                     )}
                 </div>
+                <span className={"downloadButton"}>
+                    <p onClick={downloadJson} >download all</p>
+                    <a id="downloadAnchorElem" style={{display: "none"}}/>
+                </span>
             </div>
         </>
     )

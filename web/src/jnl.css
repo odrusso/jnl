@@ -76,9 +76,11 @@ body {
 .app svg {
     cursor: pointer;
     margin: 0 10px 0 auto;
-    height: 64px;
-    width: 64px;
-    fill: gray;
+    fill: lightgray;
+}
+
+.app svg:hover {
+    fill: darkgray;
 }
 
 .block {
@@ -101,7 +103,21 @@ body {
     cursor: pointer;
 }
 
+.block .blockRemove:hover {
+    color: darkgray;
+}
+
 .block .blockText {
     font-family: 'go', monospace;
     line-height: 150%;
+}
+
+.downloadButton {
+    text-align: center;
+    color: lightgray;
+}
+
+.downloadButton:hover {
+    cursor: pointer;
+    color: gray;
 }
