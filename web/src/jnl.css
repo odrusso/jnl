@@ -62,6 +62,7 @@ body {
     color: darkgray;
     resize: none;
     box-sizing: border-box;
+    -webkit-appearance: none;
 }
 
 .form-text:focus {
