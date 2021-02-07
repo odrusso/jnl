@@ -11,12 +11,12 @@
 html {
     margin: 0;
     background-color: rgb(176, 171, 155);
-    font-family: go-bold, monospace;
-    color: rgb(254, 246, 222);
 }
 
 body {
-    margin: 50px 50px 0;
+    font-family: go-bold, monospace;
+    color: rgb(254, 246, 222);
+    background-color: transparent;
 }
 
 .header {
@@ -39,20 +39,16 @@ body {
     color: white;
 }
 
-
 .app {
     background-color: rgb(255, 252, 246);
-    width: 60%;
-    margin: 0 auto;
-    min-height: 100vh;
     border-radius: 25px 25px 0 0;
-    padding: 100px 100px 100px;
     color: rgb(81, 81, 81);
     box-shadow: 0 10px 50px 5px rgba(0, 0, 0, 0.2);
+    min-height: 100vh;
 }
 
-.form-area {
-    margin-bottom: 50px;
+.app h3 {
+    font-size: 1.8em;
 }
 
 .form-text {
@@ -61,7 +57,6 @@ body {
     border-radius: 10px;
     border: 0;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
-    padding: 30px;
     font-family: go-bold, monospace;
     font-size: 14pt;
     color: darkgray;
@@ -87,8 +82,6 @@ body {
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-    padding: 30px 40px 20px;
-    margin-bottom: 30px;
 }
 
 .block .blockDate {
