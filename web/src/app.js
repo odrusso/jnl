@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
 import {randomColor} from 'randomcolor'
 import _ from 'lodash'
+import {Col, Container, Row} from "react-bootstrap";
+import {CheckCircleFill} from "react-bootstrap-icons";
 
 const possibleGreetings = ["Hope you're okay.", "You've got this!", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
 const greeting = _.sample(possibleGreetings)
@@ -50,51 +52,81 @@ export function App(props) {
     const downloadJson = (idx) => {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages, null, 2));
         const dlAnchorElem = document.getElementById('downloadAnchorElem');
-        dlAnchorElem.setAttribute("href",     dataStr     );
+        dlAnchorElem.setAttribute("href", dataStr);
         dlAnchorElem.setAttribute("download", "messages.json");
         dlAnchorElem.click();
     }
 
-    return (
-        <>
-            <div className={"app"}>
-                <h3>{greeting}</h3>
-                <br/>
-                <br/>
-                <div className={'form-area'}>
-                    <form onSubmit={handleSubmit}>
-                        <textarea className="form-text" type="text" value={message} onChange={handleType}/>
-                        <br/>
-                        <br/>
-                        <div style={{textAlign: "center"}}>
-                            <svg onClick={handleSubmit} xmlns="http://www.w3.org/2000/svg" width="36" height="36"
-                                 viewBox="0 0 36 36">
-                                <path
-                                    d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.959 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591z"/>
-                            </svg>
-                        </div>
-                    </form>
-                </div>
+    const JNLEntry = () => {
+        return (
+            <div className={'form-area'}>
+                <form onSubmit={handleSubmit}>
+                    <textarea className="form-text p-4" key="jnl-text-area" value={message} onChange={handleType}/>
+                    <br/>
+                    <br/>
 
-                <div>
-                    {messages.slice().reverse().map((it, idx) =>
-                        <div className={"block"} key={idx}>
-                            <p className={"blockDate"} style={{color: colors[idx]}}>{it.date}</p>
-                            <i className={"blockRemove"}
-                               onClick={() => removeThisEntry(messages.length - 1 - idx)}>remove </i>
-                            <p className={"blockText"}>
-                                {it.text.split('\n').map((line) =>
-                                    <> {line} <br/> </>
-                                )}
-                            </p>
-                        </div>
-                    )}
-                </div>
-                <span className={"downloadButton"}>
-                    <p onClick={downloadJson} >download all</p>
-                    <a id="downloadAnchorElem" style={{display: "none"}}/>
-                </span>
+                    <div style={{textAlign: "center"}}>
+                        <h2><CheckCircleFill onClick={handleSubmit}/></h2>
+                    </div>
+                </form>
             </div>
-        </>
+        )
+    }
+
+    const JNLMessages = () => {
+        return (
+            <div className={"mt-5"}>
+                {messages.slice().reverse().map((it, idx) =>
+                    <div className={"block p-5 mb-3"} key={idx}>
+                        <p className={"blockDate mb-2"} style={{color: colors[idx]}}>{it.date}</p>
+                        <i className={"blockRemove"}
+                           onClick={() => removeThisEntry(messages.length - 1 - idx)}>remove </i>
+                        <p className={"blockText mb-0"}>
+                            {it.text.split('\n').map((line) =>
+                                <> {line} <br/> </>
+                            )}
+                        </p>
+                    </div>
+                )}
+            </div>
+        )
+    }
+
+    const JNLDownload = () => {
+        return (
+            <span className={"downloadButton"}>
+                <p onClick={downloadJson}>download all</p>
+                <a id="downloadAnchorElem" style={{display: "none"}}/>
+            </span>
+        )
+    }
+
+    return (
+        <Container
+            className={
+                "app " +
+                "mt-md-5 pt-md-5 " +
+                "mt-2 pt-2"
+            }
+            key="jnl-app-container"
+        >
+
+            <Row>
+                <Col sm={0} md={1}/>
+
+                <Col sm={12} md={10}>
+
+                    <h3 className={"mb-5 mt-3 ml-3 ml-md-0"}>{greeting}</h3>
+
+                    {JNLEntry(props)}
+
+                    <JNLMessages/>
+
+                    <JNLDownload/>
+                </Col>
+
+                <Col sm={0} md={1}/>
+            </Row>
+        </Container>
     )
 }
