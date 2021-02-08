@@ -1,0 +1,10 @@
+{
+  "Parameters": {
+    "VPC": {
+      "Type": "AWS::EC2::VPC::Id"
+    }
+  },
+  "Resources": {
+    // API gateway
+  }
+}
