@@ -33,5 +33,10 @@ jobs:
           invalidation: /*
 
       - name: Build and Deploy Backend
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
         working-directory: ./app
         run: sh update.sh jnl-app
+        env:
+          AWS_DEFAULT_REGION: us-east-1
