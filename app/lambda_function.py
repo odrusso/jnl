@@ -1,36 +1,48 @@
-import bcrypt
-import json
+# Oscar Russo, 2021.
+# How good is kinda-strongly typed Python!
 
-PIGEON_HOLE_PASSWORD = "pigeonHolePass"
+import json
+from crypto import *
+
+PIGEON_HOLE_PASSWORD_KEY = "pigeonHolePass"
+PIGEON_HOLE_NAME_KEY = "pigeonHoleName"
+MESSAGES_KEY = "messages"
+
+
+class HttpResponse:
+    def __init__(self, body: str, status: int = 200):
+        self.status = status
+        self.body = body
+
+    def json(self) -> object:
+        return json.dumps(self.__dict__)
 
 
 def main(event, context):
     body = json.loads(event)
 
-    input_password = body[PIGEON_HOLE_PASSWORD]
+    try:
+        input_password = body[PIGEON_HOLE_PASSWORD_KEY]
+        input_pigeon_hole_name = body[PIGEON_HOLE_NAME_KEY]
+        # input_messages = body[MESSAGES_KEY] # for POST only
+    except KeyError:
+        # Probably the body doesn't conform to the expected schema
+        return HttpResponse("Invalid request body", 400).json()
 
-    password_status = verify_password_for_pigeonhole("TODO", input_password)
+    password_valid = verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
 
-    print(f"Password Check {password_status}")
-    return "Working!"
-
-
-def verify_password_for_pigeonhole(pigeon_hole_name: str, pigeon_hole_password: str) -> bool:
-    input_bytes = str.encode(pigeon_hole_password)
-    hash_to_check_against = get_hash_for_pigeonhole(pigeon_hole_name)
-    return bcrypt.checkpw(input_bytes, hash_to_check_against)
-
-
-def get_hash_for_pigeonhole(pigeon_hole_name: str) -> bytes:
-    # TODO: Fetch real hashes!
-    pretend_salt = bcrypt.gensalt()
-    return bcrypt.hashpw(b'password', pretend_salt)
+    if password_valid:
+        return HttpResponse("Messages would go here...", 200).json()
+    else:
+        # invalid password
+        return HttpResponse("Invalid password", 403).json()
 
 
 if __name__ == "__main__":
-    body = json.dumps(
+    test_body = json.dumps(
         {
-            "pigeonHolePass": "password"
+            "pigeonHolePass": "password1",
+            "pigeonHoleName": "pigeon"
         }
     )
-    main(body, '')
+    print(main(test_body, ''))

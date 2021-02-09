@@ -1,4 +1,4 @@
-#jnl-app-role-nzvrmxtp
+# Usage sh update.sh [app-name]
 
 # Create package bundle
 mkdir package
@@ -7,9 +7,10 @@ cd package
 zip -r ../deployment.zip .
 cd ..
 zip -g deployment.zip lambda_function.py
+zip -g deployment.zip crypto.py
 
 # Redeploy to AWS
-aws lambda update-function-code --function-name jnl-app --zip-file fileb://deployment.zip
+aws lambda update-function-code --function-name $1 --zip-file fileb://deployment.zip
 
 # Clean-up
 rm -rf ./package

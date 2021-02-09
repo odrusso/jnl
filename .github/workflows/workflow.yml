@@ -22,7 +22,7 @@ jobs:
         working-directory: ./web
         run: npm run build
 
-      - name: Deploy
+      - name: Deploy Frontend
         uses: reggionick/s3-deploy@v3
         if: github.ref == 'refs/heads/master'
         with:
@@ -31,3 +31,7 @@ jobs:
           bucket-region: ap-southeast-2
           dist-id: EGCMBVUN0OYSF
           invalidation: /*
+
+      - name: Build and Deploy Backend
+        working-directory: ./app
+        run: sh update.sh jnl-app
