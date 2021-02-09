@@ -8,6 +8,9 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
       - name: Setup Node
         uses: actions/setup-node@v1
@@ -33,10 +36,7 @@ jobs:
           invalidation: /*
 
       - name: Build and Deploy Backend
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-        working-directory: ./app
         run: sh update.sh jnl-app
+        working-directory: ./app
         env:
           AWS_DEFAULT_REGION: us-east-1
