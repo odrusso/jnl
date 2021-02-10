@@ -1,6 +1,8 @@
 # Oscar Russo, 2021.
 # How good is kinda-strongly typed Python!
 
+# Current state: event is already a dict.
+
 import json
 from crypto import *
 
@@ -19,12 +21,11 @@ class HttpResponse:
 
 
 def main(event, context):
-    body = json.loads(event)
 
     try:
-        input_password = body[PIGEON_HOLE_PASSWORD_KEY]
-        input_pigeon_hole_name = body[PIGEON_HOLE_NAME_KEY]
-        # input_messages = body[MESSAGES_KEY] # for POST only
+        input_password = event[PIGEON_HOLE_PASSWORD_KEY]
+        input_pigeon_hole_name = event[PIGEON_HOLE_NAME_KEY]
+        # input_messages = event[MESSAGES_KEY] # for POST only
     except KeyError:
         # Probably the body doesn't conform to the expected schema
         return HttpResponse("Invalid request body", 400).json()
