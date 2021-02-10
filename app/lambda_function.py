@@ -13,7 +13,7 @@ MESSAGES_KEY = "messages"
 
 class HttpResponse:
     def __init__(self, body: str, status: int = 200):
-        self.status = status
+        self.statusCode = status
         self.body = body
 
     def json(self) -> object:
@@ -21,7 +21,6 @@ class HttpResponse:
 
 
 def main(event, context):
-
     try:
         input_password = event[PIGEON_HOLE_PASSWORD_KEY]
         input_pigeon_hole_name = event[PIGEON_HOLE_NAME_KEY]
@@ -40,10 +39,9 @@ def main(event, context):
 
 
 if __name__ == "__main__":
-    test_body = json.dumps(
-        {
-            "pigeonHolePass": "password1",
-            "pigeonHoleName": "pigeon"
-        }
-    )
+    test_body = {
+        "pigeonHolePass": "password1",
+        "pigeonHoleName": "pigeon"
+    }
+
     print(main(test_body, ''))
