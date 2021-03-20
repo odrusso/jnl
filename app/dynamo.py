@@ -20,3 +20,17 @@ def get_pigeonhole_data(pigeonhole_name: str) -> Optional[dict]:
     except Exception as e:
         print(e)
         return None
+
+
+def new_pigeonhole(pigeonhole_name: str, hash: str, salt: str, data: str):
+    db = boto3.resource("dynamodb")
+    table = db.Table("jnl-data")
+
+    table.put_item(
+        Item={
+            "pigeonhole_name": pigeonhole_name,
+            "hash": hash,
+            "salt": salt,
+            "data": data
+        }
+    )

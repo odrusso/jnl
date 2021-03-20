@@ -9,10 +9,11 @@ from dynamo import *
 
 PIGEON_HOLE_PASSWORD_KEY = "pigeonHolePass"
 PIGEON_HOLE_NAME_KEY = "pigeonHoleName"
+PIGEON_HOLE_MESSAGES_KEY = "messages"
 
 
 class HttpResponse:
-    def __init__(self, body: str, status: int = 200):
+    def __init__(self, body: str = "", status: int = 200):
         self.statusCode = status
         self.body = body
 
@@ -25,13 +26,16 @@ def main(event, context):
     method = event['httpMethod']
     if method == 'POST':
         return get_pigeonhole(body).json()
+    elif method == 'PUT':
+        return put_pigeonhole(body).json()
+    else:
+        return HttpResponse(status=405).json()
 
 
 def get_pigeonhole(body) -> HttpResponse:
     try:
         input_password = body[PIGEON_HOLE_PASSWORD_KEY]
         input_pigeon_hole_name = body[PIGEON_HOLE_NAME_KEY]
-        # input_messages = event[MESSAGES_KEY] # for POST only
     except KeyError:
         # Probably the body doesn't conform to the expected schema
         return HttpResponse("Invalid request body", 400)
@@ -52,12 +56,38 @@ def get_pigeonhole(body) -> HttpResponse:
         return HttpResponse("Invalid request body", 403)
 
 
+def put_pigeonhole(body) -> HttpResponse:
+    try:
+        input_password = body[PIGEON_HOLE_PASSWORD_KEY]
+        input_pigeon_hole_name = body[PIGEON_HOLE_NAME_KEY]
+        messages = body[PIGEON_HOLE_MESSAGES_KEY]
+    except KeyError:
+        # Probably the body doesn't conform to the expected schema
+        return HttpResponse("Invalid request body", 400)
+
+    pigeonhole = get_pigeonhole_data(input_pigeon_hole_name)
+
+    if pigeonhole is not None:
+        password_valid = verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
+        if not password_valid:
+            print(f"Invalid password for pigeonhole {input_pigeon_hole_name}")
+            return HttpResponse("Invalid request body", 403)
+
+    print(f"Pigeon hole doesn't exist: {input_pigeon_hole_name}")
+
+    new_hash, new_salt = create_new_hash_for_password(input_password)
+    new_pigeonhole(input_pigeon_hole_name, new_hash, new_salt, messages)
+    return HttpResponse(status=201)
+
+
 if __name__ == "__main__":
     test_body = {
-        "body": {
-            "pigeonHolePass": "password",
-            "pigeonHoleName": "test"
-        }
+        "httpMethod": "POST",
+        "body": '''{
+            "pigeonHoleName": "test2",
+            "pigeonHolePass": "password2",
+            "messages": "{[test-2]}"
+        }'''
     }
 
     print(main(test_body, ''))
