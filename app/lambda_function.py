@@ -40,7 +40,7 @@ def main(event, context):
 
 if __name__ == "__main__":
     test_body = {
-        "pigeonHolePass": "password1",
+        "pigeonHolePass": "password",
         "pigeonHoleName": "pigeon"
     }
 

@@ -7,14 +7,17 @@ EXAMPLE_HASH_B64 = b'yJCEK1PTBohXhYp0hYDxZ/4dlmbDyEP4Jm+SjuoK/e0='
 
 def verify_password_for_pigeonhole(pigeon_hole_name: str, password: str) -> bool:
     verification_password_bytes = get_hash_for_pigeonhole(pigeon_hole_name)
-    verification_salt_bytes = get_salt_for_pigeonhole(pigeon_hole_name)
+    salt = get_salt_for_pigeonhole(pigeon_hole_name)
+    this_password_bytes = gen_hash_for_password(password, salt)
 
-    return gen_hash_for_password(password, verification_salt_bytes) == verification_password_bytes
+    return this_password_bytes == verification_password_bytes
 
 
 def get_hash_for_pigeonhole(pigeon_hole_name: str) -> bytes:
     # TODO: Fetch real hashes from database!
-    return gen_hash_for_password("password")  # Hard coded to 'password'
+    salt = get_salt_for_pigeonhole(pigeon_hole_name)
+    fake_hash = gen_hash_for_password("password", salt)  # Hard coded to 'password'
+    return fake_hash
 
 
 def get_salt_for_pigeonhole(pigeon_hole_name: str) -> bytes:
