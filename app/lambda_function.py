@@ -16,6 +16,11 @@ class HttpResponse:
     def __init__(self, body: str = "", status: int = 200):
         self.statusCode = status
         self.body = body
+        self.headers = {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST,PUT'
+        }
 
     def json(self) -> dict:
         return self.__dict__
