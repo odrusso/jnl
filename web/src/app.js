@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
 import {randomColor} from 'randomcolor'
 import _ from 'lodash'
-import {Col, Container, Row} from "react-bootstrap";
+import {Button, Col, Container, Modal, Row} from "react-bootstrap";
 import {CheckCircleFill} from "react-bootstrap-icons";
 
 const possibleGreetings = ["Hope you're okay.", "You've got this!", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
 const greeting = _.sample(possibleGreetings)
+const fetchApi = 'https://api.jnlapp.io/messages'
 
 const storageState = localStorage.getItem('messages')
 let initialMessages = [];
@@ -19,10 +20,23 @@ export function App(props) {
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState(initialMessages)
     const [colors, setColors] = useState(randomColor({seed: 0, luminosity: "dark", count: messages.length}))
+    const [fetchOpen, setFetchOpen] = useState(false)
+    const [fetchType, setFetchType] = useState("POST") // POST or PUT
+    const [fetchName, setFetchName] = useState('')
+    const [fetchPassword, setFetchPassword] = useState('')
+    const [fetchError, setFetchError] = useState('')
+    const [fetchButtonEnabled, setFetchButtonEnabled] = useState(true)
 
     const handleType = (e) => {
-        // target.value should be the value of the input
         setMessage(e.target.value)
+    }
+
+    const handleTypeFetchName = (e) => {
+        setFetchName(e.target.value)
+    }
+
+    const handleTypeFetchPassword = (e) => {
+        setFetchPassword(e.target.value)
     }
 
     const updateLocalStorage = (newMessages) => {
@@ -55,6 +69,108 @@ export function App(props) {
         dlAnchorElem.setAttribute("href", dataStr);
         dlAnchorElem.setAttribute("download", "messages.json");
         dlAnchorElem.click();
+    }
+
+    const handleFetch = () => {
+        setFetchButtonEnabled(false)
+        setFetchError('')
+        fetch(
+            fetchApi,
+            {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'pigeonHoleName': fetchName,
+                    'pigeonHolePass': fetchPassword
+                })
+        })
+        .then( res => {
+            if (res.status !== 200) {
+                setFetchError('Invalid!')
+                setFetchButtonEnabled(true)
+            } else {
+                res.json().then ( data => {
+                    updateLocalStorage(data)
+                    setFetchButtonEnabled(true)
+                    setFetchPassword('')
+                    setFetchOpen(false)
+                })
+            }
+        })
+    }
+
+    const handlePut = () => {
+        setFetchButtonEnabled(false)
+        setFetchError('')
+        fetch(
+            fetchApi,
+            {
+                method: 'put',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'pigeonHoleName': fetchName,
+                    'pigeonHolePass': fetchPassword,
+                    'messages': JSON.stringify(messages)
+                })
+        })
+        .then( res => {
+            if (res.status !== 201) {
+                setFetchError('Invalid!')
+                setFetchButtonEnabled(true)
+            } else {
+                setFetchButtonEnabled(true)
+                setFetchPassword('')
+                setFetchOpen(false)
+            }
+        })
+        .catch( e => {
+            setFetchError("Server error")
+            setFetchButtonEnabled(true)
+        })
+    }
+
+    const JNLFetch = () => {
+        const displayMode = fetchType === 'POST' ? 'Fetch' : 'Put'
+        const executeMode = fetchType === 'POST' ? handleFetch : handlePut
+        return (
+            <Modal show={fetchOpen} centered>
+                <Modal.Header>
+                    <Modal.Title>Pigenhole {displayMode}</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <input className="fetch-input pl-3 py-2 mb-3" key="jnl-fetch-name" placeholder={"Pigeonhole name"} value={fetchName} onChange={handleTypeFetchName} />
+                    <input className="fetch-input pl-3 py-2" key="jnl-fetch-password" placeholder={"Pigeonhole password"} value={fetchPassword} onChange={handleTypeFetchPassword} type={"password"} />
+                </Modal.Body>
+
+                <p hidden={fetchError === ''} className={"text-danger"}>{fetchError}</p>
+
+                <Modal.Footer>
+                    <Button variant={"secondary"} onClick={() => {setFetchOpen(false)}}>Close</Button>
+                    <Button variant={"primary"} disabled={!fetchButtonEnabled} onClick={() => executeMode()}>{displayMode}</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+
+    const JNLHeader = () => {
+        return (
+            <>
+                <div className="header">
+                    <a href={"#"} onClick={() => {setFetchOpen(true); setFetchType("POST")}}>fetch</a>
+                    <a>|</a>
+                    <a href={"#"} onClick={() => {setFetchOpen(true); setFetchType("PUT")}}>put</a>
+                    {/*<a>|</a>*/}
+                    {/*<a href={"/info"}>info</a>*/}
+                </div>
+            </>
+        );
     }
 
     const JNLEntry = () => {
@@ -102,31 +218,35 @@ export function App(props) {
     }
 
     return (
-        <Container
-            className={
-                "app " +
-                "mt-md-5 pt-md-5 " +
-                "mt-2 pt-2"
-            }
-            key="jnl-app-container"
-        >
+        <>
+            <JNLHeader />
+            <Container
+                className={
+                    "app " +
+                    "mt-md-3 pt-md-5 " +
+                    "mt-2 pt-2"
+                }
+                key="jnl-app-container"
+            >
+                {JNLFetch(props)}
 
-            <Row>
-                <Col sm={0} md={1}/>
+                <Row>
+                    <Col sm={0} md={1}/>
 
-                <Col sm={12} md={10}>
+                    <Col sm={12} md={10}>
 
-                    <h3 className={"mb-5 mt-3 ml-3 ml-md-0"}>{greeting}</h3>
+                        <h3 className={"mb-5 mt-3 ml-3 ml-md-0"}>{greeting}</h3>
 
-                    {JNLEntry(props)}
+                        {JNLEntry(props)}
 
-                    <JNLMessages/>
+                        <JNLMessages/>
 
-                    <JNLDownload/>
-                </Col>
+                        <JNLDownload/>
+                    </Col>
 
-                <Col sm={0} md={1}/>
-            </Row>
-        </Container>
+                    <Col sm={0} md={1}/>
+                </Row>
+            </Container>
+        </>
     )
 }
