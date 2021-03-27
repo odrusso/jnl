@@ -4,5 +4,6 @@ Pragmatic journelling webapp. No servers, no analytics, no tracking.
 hosted at https://jnlapp.io/
 
 ## Stack
-React, hosted from S3 behind CloudFront.  
+React, hosted from S3 behind AWS CloudFront.  
+AWS Fargate API, trigged by AWS API Gateway, stored in an AWS DynamoDB.  
 Github Actions will automatically deploy code from Master to this S3 bucket.
