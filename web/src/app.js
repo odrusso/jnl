@@ -27,6 +27,12 @@ export function App(props) {
     const [fetchError, setFetchError] = useState('')
     const [fetchButtonEnabled, setFetchButtonEnabled] = useState(true)
 
+    document.addEventListener('keydown', (event) => {
+        if (event.code === 'Escape' ) {
+            setFetchOpen(false)
+        }
+    })
+
     const handleType = (e) => {
         setMessage(e.target.value)
     }
