@@ -140,21 +140,37 @@ export function App(props) {
         const executeMode = fetchType === 'POST' ? handleFetch : handlePut
         return (
             <Modal show={fetchOpen} centered>
-                <Modal.Header>
-                    <Modal.Title>Pigenhole {displayMode}</Modal.Title>
-                </Modal.Header>
+                <form onSubmit={() => {}}>
+                    <Modal.Header>
+                        <Modal.Title>Pigeonhole {displayMode}</Modal.Title>
+                    </Modal.Header>
 
-                <Modal.Body>
-                    <input className="fetch-input pl-3 py-2 mb-3" key="jnl-fetch-name" placeholder={"Pigeonhole name"} value={fetchName} onChange={handleTypeFetchName} />
-                    <input className="fetch-input pl-3 py-2" key="jnl-fetch-password" placeholder={"Pigeonhole password"} value={fetchPassword} onChange={handleTypeFetchPassword} type={"password"} />
-                </Modal.Body>
+                    <Modal.Body>
+                        <input
+                            disabled={!fetchButtonEnabled}
+                            className="fetch-input pl-3 py-2 mb-3"
+                            key="jnl-fetch-name"
+                            placeholder={"Pigeonhole name"}
+                            value={fetchName}
+                            onChange={handleTypeFetchName}
+                        />
+                        <input
+                            disabled={!fetchButtonEnabled}
+                            className="fetch-input pl-3 py-2"
+                            key="jnl-fetch-password"
+                            placeholder={"Pigeonhole password"}
+                            value={fetchPassword}
+                            onChange={handleTypeFetchPassword}
+                            type={"password"}
+                        />
+                        <p hidden={fetchError === ''} className={"text-danger mt-3"}>{fetchError}</p>
+                    </Modal.Body>
 
-                <p hidden={fetchError === ''} className={"text-danger"}>{fetchError}</p>
-
-                <Modal.Footer>
-                    <Button variant={"secondary"} onClick={() => {setFetchOpen(false)}}>Close</Button>
-                    <Button variant={"primary"} disabled={!fetchButtonEnabled} onClick={() => executeMode()}>{displayMode}</Button>
-                </Modal.Footer>
+                    <Modal.Footer>
+                        <Button variant={"secondary"} onClick={() => {setFetchOpen(false)}}>Close</Button>
+                        <Button type={"submit"} variant={"primary"} disabled={!fetchButtonEnabled} onClick={() => executeMode()}>{displayMode}</Button>
+                    </Modal.Footer>
+                </form>
             </Modal>
         )
     }
