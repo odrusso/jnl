@@ -141,3 +141,15 @@ body {
     color: lightgray;
     background-color: #fafafa
 }
+
+.contribute {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    color: rgba(0, 0, 0, 0.1)
+}
+
+.contribute:hover {
+    text-decoration: none;
+    color: white;
+}
