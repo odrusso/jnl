@@ -183,15 +183,15 @@ export function App(props) {
 
     const JNLHeader = () => {
         return (
-            <>
-                <div className="header">
-                    <a href={"#"} onClick={() => {setFetchOpen(true); setFetchType("POST")}}>fetch</a>
-                    <a>|</a>
-                    <a href={"#"} onClick={() => {setFetchOpen(true); setFetchType("PUT")}}>put</a>
-                    {/*<a>|</a>*/}
-                    {/*<a href={"/info"}>info</a>*/}
-                </div>
-            </>
+            <div className="header
+                            mt-3
+                            d-flex justify-content-center justify-content-md-end">
+                <a href={"#"} onClick={() => {setFetchOpen(true); setFetchType("POST")}}>fetch</a>
+                <a>|</a>
+                <a href={"#"} onClick={() => {setFetchOpen(true); setFetchType("PUT")}}>put</a>
+                {/*<a>|</a>*/}
+                {/*<a href={"/info"}>info</a>*/}
+            </div>
         );
     }
 

@@ -19,13 +19,6 @@ body {
     background-color: transparent;
 }
 
-.header {
-    width: 100%;
-    text-align: right;
-    padding-right: 50px;
-    margin-top: 25px;
-}
-
 .header a {
     margin-right: 30px;
 }
