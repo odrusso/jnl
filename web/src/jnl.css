@@ -127,8 +127,17 @@ body {
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
     font-family: go-bold, monospace;
     font-size: 14pt;
-    color: darkgray;
+    color: black;
     resize: none;
     box-sizing: border-box;
     -webkit-appearance: none;
+}
+
+.fetch-input::placeholder {
+    color: darkgray;
+}
+
+.fetch-input:disabled {
+    color: lightgray;
+    background-color: #fafafa
 }
