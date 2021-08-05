@@ -21,6 +21,10 @@ jobs:
         working-directory: ./web
         run: npm i
 
+      - name: Test Frontend
+        working-directory: ./web
+        run: npm run test
+
       - name: Build
         working-directory: ./web
         run: npm run build
@@ -36,6 +40,7 @@ jobs:
           invalidation: /*
 
       - name: Build and Deploy Backend
+        if: github.ref == 'refs/heads/master'
         run: sh update.sh jnl-app
         working-directory: ./app
         env:
