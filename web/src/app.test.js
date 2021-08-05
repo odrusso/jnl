@@ -7,5 +7,5 @@ const SomeComponent = () => {
 
 test("header renders", async () => {
     render(<SomeComponent />)
-    await screen.findByText("Hello world!")
+    await screen.findByText("Hello world! - should fail")
 })
