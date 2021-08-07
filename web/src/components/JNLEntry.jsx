@@ -10,7 +10,6 @@ export const JNLEntry = ({addMessage}) => {
         if (message !== '') {
             let now = new Date()
             let timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`
-            console.log(timeString)
             addMessage(message, timeString)
         }
         setMessage('')
