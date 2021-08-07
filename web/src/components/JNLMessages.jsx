@@ -3,11 +3,11 @@ import {randomColor} from "randomcolor";
 
 export const messageHash = (message) => {
     // Returns an integer which can be used as a seed for a random color
-    return message.text.split("").map((it) => it.charCodeAt(0)).reduce((acc, curr) => acc + curr)
+    return message.split("").map((it) => it.charCodeAt(0)).reduce((acc, curr) => acc + curr)
 }
 
 export const getColorForMessage = (message) => {
-    return randomColor({seed: messageHash(message), luminosity: "dark"})
+    return randomColor({seed: messageHash(message.text), luminosity: "dark"})
 }
 
 export const JNLMessages = ({messages, removeMessage}) => {

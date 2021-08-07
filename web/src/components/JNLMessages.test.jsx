@@ -1,9 +1,46 @@
 import React from "react";
-import {JNLMessages} from "./JNLMessages";
+import {getColorForMessage, JNLMessages, messageHash} from "./JNLMessages";
 import {fireEvent, render, screen, within} from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect"
 
 describe("Messages test", () => {
+
+    describe("Utilities test", () => {
+        test("message hash returns an integer", () => {
+            const result = messageHash("Some text")
+            expect(typeof result).toBe("number")
+        })
+
+        test("hash returns same result for same messages", () => {
+            const result1 = messageHash("Some text")
+            const result2 = messageHash("Some text")
+            expect(result1).toEqual(result2)
+        })
+
+        test("hash returns different result for different messages", () => {
+            const result1 = messageHash("Some text")
+            const result2 = messageHash("Some other text")
+            expect(result1).not.toEqual(result2)
+        })
+
+        test("color for message returns hex color", () => {
+            const result = getColorForMessage({text: "Some text"})
+            expect(result).toMatch(/^#[a-f0-9]{6}$/)
+        })
+
+        test("color for message returns same color for same messages", () => {
+            const result1 = getColorForMessage({text: "Some text"})
+            const result2 = getColorForMessage({text: "Some text"})
+            expect(result1).toEqual(result2)
+        })
+
+        test("color for message different color for different messages", () => {
+            const result1 = getColorForMessage({text: "Some text"})
+            const result2 = getColorForMessage({text: "Some other text"})
+            expect(result1).not.toEqual(result2)
+        })
+    })
+
     test("renders correct components with no messages", async () => {
         render(<JNLMessages messages={[]}/>)
         const messagesContainer = await screen.findByTestId("messages-container")
