@@ -24,14 +24,13 @@ export const JNLEntry = ({addMessage}) => {
                     key="jnl-text-area"
                     value={message}
                     data-testid={"entry-message"}
+                    aria-label={"message entry"}
                     onChange={(e) => setMessage(e.target.value)}/>
                 <br/>
                 <br/>
 
                 <div style={{textAlign: "center"}}>
-                    <h2>
-                        <CheckCircleFill data-testid={"submit-message"} onClick={handleSubmit}/>
-                    </h2>
+                    <CheckCircleFill size={"32px"} data-testid={"submit-message"} onClick={handleSubmit}/>
                 </div>
             </form>
         </div>

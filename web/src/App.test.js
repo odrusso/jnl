@@ -1,6 +1,7 @@
 import React from 'react'
 import {fireEvent, render, screen} from '@testing-library/react'
 import "@testing-library/jest-dom/extend-expect"
+import {axe} from 'jest-axe';
 import {App} from "./App";
 
 // eslint-disable-next-line no-undef
@@ -9,6 +10,11 @@ beforeEach(() => {
 })
 
 describe("Application tests", () => {
+    test("is accessible", async () => {
+        const { container } = render(<App/>)
+        expect(await axe(container)).toHaveNoViolations()
+    })
+
     test("can write a message", async () => {
         render(<App/>)
 

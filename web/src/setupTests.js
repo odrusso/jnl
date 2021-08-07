@@ -1,5 +1,9 @@
 import '@testing-library/jest-dom/extend-expect'
 import {server} from './mocks/server'
+import {toHaveNoViolations} from "jest-axe";
+
+expect.extend(toHaveNoViolations)
+
 
 // Node has no concept of fetch, so we polyfill here just to override immediately
 // eslint-disable-next-line no-undef
