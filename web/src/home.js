@@ -1,7 +1,7 @@
 import React from 'react'
 import {App} from "./app";
 
-export function Home(props) {
+export const Home = () => {
     return (
         <>
             <App/>
