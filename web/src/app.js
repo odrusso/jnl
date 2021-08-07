@@ -1,23 +1,23 @@
-import React, {useState} from 'react'
-import _ from 'lodash'
+import React, {useEffect, useState} from 'react'
 import {Col, Container, Row} from "react-bootstrap";
 import {JNLEntry} from "./components/JNLEntry.jsx";
 import {JNLMessages} from "./components/JNLMessages";
 import {JNLHeader} from "./components/JNLHeader";
-
-const possibleGreetings = ["Hope you're okay.", "You've got this!", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
-const greeting = _.sample(possibleGreetings)
-
-const storageState = localStorage.getItem('messages')
-let initialMessages = [];
-if (storageState !== null) {
-    initialMessages = JSON.parse(storageState)
-} else {
-    localStorage.setItem('messages', JSON.stringify([]))
-}
+import {JNLGreeting} from "./components/JNLGreeting";
 
 export const App = () => {
-    const [messages, setMessages] = useState(initialMessages)
+    const [messages, setMessages] = useState([])
+
+    // Run only on initial render of the app
+    useEffect(() => {
+        // Pull data from LocalStorage, if it exists
+        const storageState = localStorage.getItem('messages')
+        if (storageState !== null) {
+            setMessages(JSON.parse(storageState))
+        } else {
+            localStorage.setItem('messages', JSON.stringify([]))
+        }
+    }, [])
 
     const updateLocalStorage = (newMessages) => {
         setMessages(newMessages)
@@ -38,19 +38,12 @@ export const App = () => {
         <>
             <JNLHeader messages={messages} updateLocalStorage={updateLocalStorage}/>
             <Container
-                className={
-                    "app " +
-                    "mt-md-3 pt-md-5 " +
-                    "mt-2 pt-2"
-                }
-                key="jnl-app-container"
-            >
+                className={"app mt-md-3 pt-md-5 mt-2 pt-2"}>
                 <Row>
                     <Col sm={0} md={1}/>
 
                     <Col sm={12} md={10}>
-
-                        <h3 className={"mb-5 mt-3 ml-3 ml-md-0"}>{greeting}</h3>
+                        <JNLGreeting/>
 
                         <JNLEntry addMessage={addMessage}/>
 
