@@ -55,14 +55,6 @@ export function App(props) {
         updateLocalStorage(newMessages)
     }
 
-    const downloadJson = () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages, null, 2));
-        const dlAnchorElem = document.getElementById('downloadAnchorElem');
-        dlAnchorElem.setAttribute("href", dataStr);
-        dlAnchorElem.setAttribute("download", "messages.json");
-        dlAnchorElem.click();
-    }
-
     const handleFetch = () => {
         setFetchButtonEnabled(false)
         setFetchError('')
@@ -190,15 +182,6 @@ export function App(props) {
         );
     }
 
-    const JNLDownload = () => {
-        return (
-            <span className={"downloadButton"}>
-                <p onClick={downloadJson}>download all</p>
-                <a id="downloadAnchorElem" style={{display: "none"}}/>
-            </span>
-        )
-    }
-
     return (
         <>
             <JNLHeader/>
@@ -222,8 +205,6 @@ export function App(props) {
                         <JNLEntry addMessage={addMessage}/>
 
                         <JNLMessages messages={messages} removeMessage={removeMessage}/>
-
-                        <JNLDownload/>
                     </Col>
 
                     <Col sm={0} md={1}/>
