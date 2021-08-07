@@ -30,10 +30,11 @@ export const App = () => {
     }
 
     const removeMessage = (idx) => {
-        let newMessages = messages
+        let newMessages = messages.slice()
         newMessages.splice(idx, 1)
         updateLocalStorage(newMessages)
     }
+
     return (
         <>
             <JNLHeader messages={messages} updateLocalStorage={updateLocalStorage}/>
