@@ -97,6 +97,7 @@ body {
 .block .blockText {
     font-family: 'go', monospace;
     line-height: 150%;
+    word-wrap: break-word;
 }
 
 .downloadButton {
