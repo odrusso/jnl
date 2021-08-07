@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-import {randomColor} from 'randomcolor'
 import _ from 'lodash'
 import {Button, Col, Container, Modal, Row} from "react-bootstrap";
 import {JNLEntry} from "./components/JNLEntry.jsx";
+import {JNLMessages} from "./components/JNLMessages";
 
 const possibleGreetings = ["Hope you're okay.", "You've got this!", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
 const greeting = _.sample(possibleGreetings)
@@ -18,7 +18,6 @@ if (storageState !== null) {
 
 export function App(props) {
     const [messages, setMessages] = useState(initialMessages)
-    const [colors, setColors] = useState(randomColor({seed: 0, luminosity: "dark", count: messages.length}))
     const [fetchOpen, setFetchOpen] = useState(false)
     const [fetchType, setFetchType] = useState("POST") // POST or PUT
     const [fetchName, setFetchName] = useState('')
@@ -43,7 +42,6 @@ export function App(props) {
     const updateLocalStorage = (newMessages) => {
         setMessages(newMessages)
         localStorage.setItem('messages', JSON.stringify(newMessages))
-        setColors(colors.concat([randomColor({luminosity: "dark"})]))
     }
 
     const addMessage = (msg, timeString) => {
@@ -51,7 +49,7 @@ export function App(props) {
         updateLocalStorage(newMessages)
     }
 
-    const removeThisEntry = (idx) => {
+    const removeMessage = (idx) => {
         let newMessages = messages
         newMessages.splice(idx, 1)
         updateLocalStorage(newMessages)
@@ -192,24 +190,6 @@ export function App(props) {
         );
     }
 
-    const JNLMessages = () => {
-        return (
-            <div className={"mt-5"}>
-                {messages.slice().reverse().map((it, idx) =>
-                    <div className={"block p-5 mb-3"} key={idx}>
-                        <p className={"blockDate mb-2"} style={{color: colors[idx]}}>{it.date}</p>
-                        <i className={"blockRemove"}
-                           onClick={() => removeThisEntry(messages.length - 1 - idx)}>remove </i>
-                        <p className={"blockText mb-0"}>
-                            {it.text.split('\n').map((line) => line
-                            )}
-                        </p>
-                    </div>
-                )}
-            </div>
-        )
-    }
-
     const JNLDownload = () => {
         return (
             <span className={"downloadButton"}>
@@ -241,7 +221,7 @@ export function App(props) {
 
                         <JNLEntry addMessage={addMessage}/>
 
-                        <JNLMessages/>
+                        <JNLMessages messages={messages} removeMessage={removeMessage}/>
 
                         <JNLDownload/>
                     </Col>
