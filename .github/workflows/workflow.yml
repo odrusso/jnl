@@ -39,6 +39,10 @@ jobs:
           dist-id: EGCMBVUN0OYSF
           invalidation: /*
 
+      - name: Test Backend
+        run: pip install -r requirements.txt && python -m unittest
+        working-directory: ./app
+
       - name: Build and Deploy Backend
         if: github.ref == 'refs/heads/master'
         run: sh update.sh jnl-app

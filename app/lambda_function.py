@@ -4,8 +4,8 @@
 # Current state: event is already a dict.
 
 import json
-from crypto import *
-from dynamo import *
+import crypto
+import dynamo
 
 PIGEON_HOLE_PASSWORD_KEY = "pigeonHolePass"
 PIGEON_HOLE_NAME_KEY = "pigeonHoleName"
@@ -45,13 +45,13 @@ def get_pigeonhole(body) -> HttpResponse:
         # Probably the body doesn't conform to the expected schema
         return HttpResponse("Invalid request body", 400)
 
-    pigeonhole = get_pigeonhole_data(input_pigeon_hole_name)
+    pigeonhole = crypto.get_pigeonhole_data(input_pigeon_hole_name)
 
     if pigeonhole is None:
         print(f"Invalid pigeon hole name: {input_pigeon_hole_name}")
         return HttpResponse("Invalid request body", 403)
 
-    password_valid = verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
+    password_valid = crypto.verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
 
     if password_valid:
         return HttpResponse(pigeonhole['data'], 200)
@@ -70,18 +70,18 @@ def put_pigeonhole(body) -> HttpResponse:
         # Probably the body doesn't conform to the expected schema
         return HttpResponse("Invalid request body", 400)
 
-    pigeonhole = get_pigeonhole_data(input_pigeon_hole_name)
+    pigeonhole = dynamo.get_pigeonhole_data(input_pigeon_hole_name)
 
     if pigeonhole is not None:
-        password_valid = verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
+        password_valid = crypto.verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
         if not password_valid:
             print(f"Invalid password for pigeonhole {input_pigeon_hole_name}")
             return HttpResponse("Invalid request body", 403)
 
     print(f"Pigeon hole doesn't exist: {input_pigeon_hole_name}")
 
-    new_hash, new_salt = create_new_hash_for_password(input_password)
-    new_pigeonhole(input_pigeon_hole_name, new_hash, new_salt, messages)
+    new_hash, new_salt = crypto.create_new_hash_for_password(input_password)
+    dynamo.new_pigeonhole(input_pigeon_hole_name, new_hash, new_salt, messages)
     return HttpResponse(status=201)
 
 
