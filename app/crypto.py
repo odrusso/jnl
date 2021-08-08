@@ -1,12 +1,12 @@
 import hashlib
 import base64
 import os
-from boto3.dynamodb.types import Binary
-from dynamo import *
+import boto3
+import dynamo
 
 
 def verify_password_for_pigeonhole(pigeon_hole_name: str, password: str) -> bool:
-    pigeonhole = get_pigeonhole_data(pigeon_hole_name)
+    pigeonhole = dynamo.get_pigeonhole_data(pigeon_hole_name)
 
     verification_password_bytes = get_hash_for_pigeonhole(pigeonhole)
     salt = get_salt_for_pigeonhole(pigeonhole)
@@ -25,7 +25,7 @@ def get_salt_for_pigeonhole(pigeonhole: dict) -> bytes:
 
 
 def conform(value) -> str:
-    if type(value) == Binary:
+    if type(value) == boto3.dynamodb.types.Binary:
         return value.value.decode("utf-8")
     else:
         return value
@@ -33,10 +33,10 @@ def conform(value) -> str:
 
 def gen_hash_for_password(password: str, salt: bytes) -> bytes:
     return hashlib.pbkdf2_hmac(
-        'sha256',
-        get_bytes_from_password(password),
-        salt,
-        100000
+            'sha256',
+            get_bytes_from_password(password),
+            salt,
+            100000
     )
 
 
