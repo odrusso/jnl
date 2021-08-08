@@ -1,7 +1,7 @@
 import hashlib
 import base64
 import os
-import boto3
+import boto3.dynamodb.types
 import dynamo
 
 
