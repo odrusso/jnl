@@ -45,7 +45,7 @@ def get_pigeonhole(body) -> HttpResponse:
         # Probably the body doesn't conform to the expected schema
         return HttpResponse("Invalid request body", 400)
 
-    pigeonhole = crypto.get_pigeonhole_data(input_pigeon_hole_name)
+    pigeonhole = dynamo.get_pigeonhole_data(input_pigeon_hole_name)
 
     if pigeonhole is None:
         print(f"Invalid pigeon hole name: {input_pigeon_hole_name}")
