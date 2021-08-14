@@ -1,9 +1,18 @@
 import {Button, Modal} from "react-bootstrap";
 import React, {useState} from "react";
+import {JNLMessage} from "./JNLMessages";
 
 const fetchApi = 'https://api.jnlapp.io/messages'
 
-export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLocalStorage}) => {
+type JNLFetchProps = {
+    fetchOpen: boolean,
+    setFetchOpen: (bool: boolean) => void,
+    fetchType: "POST" | "PUT",
+    messages: JNLMessage[],
+    updateLocalStorage: (messages: JNLMessage[]) => void
+}
+
+export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLocalStorage}: JNLFetchProps): JSX.Element => {
     const [fetchName, setFetchName] = useState('')
     const [fetchPassword, setFetchPassword] = useState('')
     const [fetchError, setFetchError] = useState('')
@@ -49,8 +58,7 @@ export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLo
                 }
                 setFetchButtonEnabled(true)
             })
-            .catch(e => {
-                console.error(e)
+            .catch(() => {
                 setFetchError("Unknown error")
                 setFetchButtonEnabled(true)
             })
@@ -75,7 +83,7 @@ export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLo
             .then(res => {
                 switch(res.status) {
                     case 200:
-                        res.json().then(data => {
+                        res.json().then((data: JNLMessage[]) => {
                             updateLocalStorage(data)
                             setFetchButtonEnabled(true)
                             setFetchPassword('')
@@ -96,8 +104,7 @@ export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLo
                 }
                 setFetchButtonEnabled(true)
             })
-            .catch(e => {
-                console.error(e)
+            .catch(() => {
                 setFetchError("Unknown error")
                 setFetchButtonEnabled(true)
             })
@@ -111,7 +118,7 @@ export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLo
             data-testid={"modal"}
             centered
         >
-            <form onSubmit={() => {}}>
+            <form onSubmit={e => e.preventDefault()}>
                 <Modal.Header>
                     <Modal.Title>Pigeonhole {displayMode}</Modal.Title>
                 </Modal.Header>

@@ -31,8 +31,8 @@ describe("Entry area tests", () => {
         fireEvent.click(screen.getByTestId("submit-message"))
 
         expect(mockAddMessage.mock.calls.length).toBe(1)
-        expect(mockAddMessage.mock.calls[0][0]).toBe("Some text!")
-        expect(mockAddMessage.mock.calls[0][1]).toMatch(/^[0-9]+:[0-9]+ [0-9]+\/[0-9]+\/[0-9]+$/)
+        expect(mockAddMessage.mock.calls[0][0].text).toBe("Some text!")
+        expect(mockAddMessage.mock.calls[0][0].date).toMatch(/^[0-9]+:[0-9]+ [0-9]+\/[0-9]+\/[0-9]+$/)
     })
 
     test("submitting text resets text in field", async () => {

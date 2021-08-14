@@ -172,7 +172,6 @@ describe("Fetch tests", () => {
             await waitFor(async () => {
                 expect(await within(modalContainer).findByText("Put")).not.toBeDisabled()
             })
-            console.log(requestBody)
             expect(requestBody.messages).toEqual(JSON.stringify(messages))
             expect(requestBody.pigeonHoleName).toEqual("some name")
             expect(requestBody.pigeonHolePass).toEqual("some pass")
@@ -320,7 +319,6 @@ describe("Fetch tests", () => {
             await waitFor(async () => {
                 expect(await within(modalContainer).findByText("Put")).not.toBeDisabled()
             })
-            console.log(requestBody)
             expect(requestBody.messages).toEqual(JSON.stringify(messages))
             expect(requestBody.pigeonHoleName).toEqual("some name")
             expect(requestBody.pigeonHolePass).toEqual("some pass")

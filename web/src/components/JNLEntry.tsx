@@ -1,16 +1,21 @@
 import React, {useState} from "react";
 import {CheckCircleFill} from "react-bootstrap-icons";
+import {JNLMessage} from "./JNLMessages";
 
-export const JNLEntry = ({addMessage}) => {
+type JNLEntryProps = {
+    addMessage: (message: JNLMessage) => void
+}
+
+export const JNLEntry = ({addMessage}: JNLEntryProps): JSX.Element => {
 
     const [message, setMessage] = useState('')
 
     const handleSubmit = (e) => {
         // Appends message to messages
         if (message !== '') {
-            let now = new Date()
-            let timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`
-            addMessage(message, timeString)
+            const now = new Date()
+            const timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`
+            addMessage({text: message, date: timeString})
         }
         setMessage('')
         e.preventDefault()

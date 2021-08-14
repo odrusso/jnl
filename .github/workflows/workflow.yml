@@ -23,7 +23,7 @@ jobs:
 
       - name: Test Frontend
         working-directory: ./web
-        run: npm run test
+        run: npx tsc && npm run test
 
       - name: Build
         working-directory: ./web

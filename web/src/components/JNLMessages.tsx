@@ -1,16 +1,26 @@
 import React from "react";
 import {randomColor} from "randomcolor";
 
-export const messageHash = (message) => {
+export type JNLMessage = {
+    date: string,
+    text: string
+};
+
+export const messageHash = (message: string): number => {
     // Returns an integer which can be used as a seed for a random color
     return message.split("").map((it) => it.charCodeAt(0)).reduce((acc, curr) => acc + curr)
 }
 
-export const getColorForMessage = (message) => {
+export const getColorForMessage = (message: JNLMessage): string => {
     return randomColor({seed: messageHash(message.text), luminosity: "dark"})
 }
 
-export const JNLMessages = ({messages, removeMessage}) => {
+type JNLMessageProps = {
+    messages: JNLMessage[],
+    removeMessage: (number) => void
+}
+
+export const JNLMessages = ({messages, removeMessage}: JNLMessageProps): JSX.Element => {
     return (
         <div className={"mt-5"} data-testid={"messages-container"}>
             {messages.slice().reverse().map((it, idx) =>

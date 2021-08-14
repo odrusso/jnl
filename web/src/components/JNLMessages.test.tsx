@@ -24,19 +24,19 @@ describe("Messages test", () => {
         })
 
         test("color for message returns hex color", () => {
-            const result = getColorForMessage({text: "Some text"})
+            const result = getColorForMessage({text: "Some text", date: ""})
             expect(result).toMatch(/^#[a-f0-9]{6}$/)
         })
 
         test("color for message returns same color for same messages", () => {
-            const result1 = getColorForMessage({text: "Some text"})
-            const result2 = getColorForMessage({text: "Some text"})
+            const result1 = getColorForMessage({text: "Some text", date: ""})
+            const result2 = getColorForMessage({text: "Some text", date: ""})
             expect(result1).toEqual(result2)
         })
 
         test("color for message different color for different messages", () => {
-            const result1 = getColorForMessage({text: "Some text"})
-            const result2 = getColorForMessage({text: "Some other text"})
+            const result1 = getColorForMessage({text: "Some text", date: ""})
+            const result2 = getColorForMessage({text: "Some other text", date: ""})
             expect(result1).not.toEqual(result2)
         })
     })
