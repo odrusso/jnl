@@ -1,4 +1,5 @@
-# jnl 
+![jnl-readme-header](https://user-images.githubusercontent.com/15084674/129442900-24daa50f-79b3-491d-860b-de35b7885e36.png)
+
 ![Deploy JNL to S3 for static hosting](https://github.com/odrusso/jnl/workflows/Deploy%20JNL%20to%20S3%20for%20static%20hosting/badge.svg)  
 Pragmatic journelling webapp. No servers, no analytics, no tracking.  
 hosted at https://jnlapp.io/
