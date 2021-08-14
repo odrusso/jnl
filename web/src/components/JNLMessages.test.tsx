@@ -24,25 +24,25 @@ describe("Messages test", () => {
         })
 
         test("color for message returns hex color", () => {
-            const result = getColorForMessage({text: "Some text"})
+            const result = getColorForMessage({text: "Some text", date: ""})
             expect(result).toMatch(/^#[a-f0-9]{6}$/)
         })
 
         test("color for message returns same color for same messages", () => {
-            const result1 = getColorForMessage({text: "Some text"})
-            const result2 = getColorForMessage({text: "Some text"})
+            const result1 = getColorForMessage({text: "Some text", date: ""})
+            const result2 = getColorForMessage({text: "Some text", date: ""})
             expect(result1).toEqual(result2)
         })
 
         test("color for message different color for different messages", () => {
-            const result1 = getColorForMessage({text: "Some text"})
-            const result2 = getColorForMessage({text: "Some other text"})
+            const result1 = getColorForMessage({text: "Some text", date: ""})
+            const result2 = getColorForMessage({text: "Some other text", date: ""})
             expect(result1).not.toEqual(result2)
         })
     })
 
     test("renders correct components with no messages", async () => {
-        render(<JNLMessages messages={[]}/>)
+        render(<JNLMessages messages={[]} removeMessage={jest.fn()}/>)
         const messagesContainer = await screen.findByTestId("messages-container")
         expect(messagesContainer).toBeInTheDocument()
         expect(messagesContainer.children.length).toBe(0)
@@ -50,7 +50,7 @@ describe("Messages test", () => {
 
     test("renders single message when passed in", async () => {
         const messages = [{text: "Hello world!", date: "00:00 12/34/5678"}]
-        render(<JNLMessages messages={messages}/>)
+        render(<JNLMessages messages={messages} removeMessage={jest.fn()}/>)
         expect(await screen.findByText("Hello world!")).toBeInTheDocument()
         expect(await screen.findByText("00:00 12/34/5678")).toBeInTheDocument()
     })
@@ -60,7 +60,7 @@ describe("Messages test", () => {
             {text: "Hello world!", date: "00:00 12/34/5678"},
             {text: "Hello world again!", date: "00:01 12/34/5678"}
         ]
-        render(<JNLMessages messages={messages}/>)
+        render(<JNLMessages messages={messages} removeMessage={jest.fn()}/>)
         expect(await screen.findByText("Hello world!")).toBeInTheDocument()
         expect(await screen.findByText("00:00 12/34/5678")).toBeInTheDocument()
 
@@ -73,21 +73,21 @@ describe("Messages test", () => {
             {text: "Hello world!", date: "00:00 12/34/5678"},
             {text: "Hello world again!", date: "00:01 12/34/5678"}
         ]
-        render(<JNLMessages messages={messages}/>)
+        render(<JNLMessages messages={messages} removeMessage={jest.fn()}/>)
         const messageContainer = await screen.findByTestId("messages-container")
-        expect(within(messageContainer.children[0]).getByText("remove")).toBeInTheDocument()
-        expect(within(messageContainer.children[1]).getByText("remove")).toBeInTheDocument()
+        expect(within(messageContainer.children[0] as HTMLElement).getByText("remove")).toBeInTheDocument()
+        expect(within(messageContainer.children[1] as HTMLElement).getByText("remove")).toBeInTheDocument()
     })
 
     test("creates new lines on newline chars", async () => {
         const messages = [
             {text: "1st line\n2nd line", date: "00:00 12/34/5678"},
         ]
-        render(<JNLMessages messages={messages}/>)
+        render(<JNLMessages messages={messages} removeMessage={jest.fn()}/>)
         // These will only work if the text is broken up into different elements
         expect(await screen.findByText("1st line")).toBeInTheDocument()
         expect(await screen.findByText("1st line")).toBeInTheDocument()
-        expect(screen.getByText("1st line").parentElement.innerHTML).toContain("<br>")
+        expect(screen.getByText("1st line").parentElement?.innerHTML).toContain("<br>")
     })
 
     test("clicking remove calls the removeElement method for single message", async () => {

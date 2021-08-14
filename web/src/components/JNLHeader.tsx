@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {JNLFetch} from "./JNLFetch";
+import {JNLMessage} from "./JNLMessages";
 
-export const JNLHeader = ({messages, updateLocalStorage}) => {
+type JNLHeaderProps = {
+    messages: JNLMessage[],
+    updateLocalStorage: (messages: JNLMessage[]) => void
+}
+
+export const JNLHeader = ({messages, updateLocalStorage}: JNLHeaderProps): JSX.Element => {
     const [fetchOpen, setFetchOpen] = useState(false)
-    const [fetchType, setFetchType] = useState("POST") // POST or PUT
+    const [fetchType, setFetchType] = useState<"POST" | "PUT">("POST")
 
     // Only run on initial render of this component
     useEffect(() => {

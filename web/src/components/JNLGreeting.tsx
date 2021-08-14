@@ -4,7 +4,7 @@ import _ from "lodash";
 export const possibleGreetings = ["Hope you're okay.", "You've got this!", "How's it hanging?", "Cool green moss.", "Hiiii :)", "You're swell."]
 
 
-export const JNLGreeting = () => {
+export const JNLGreeting = (): JSX.Element => {
 
     const [greeting] = useState(_.sample(possibleGreetings))
 

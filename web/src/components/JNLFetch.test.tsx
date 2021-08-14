@@ -9,8 +9,10 @@ describe("Fetch tests", () => {
     test("clicking close exits the modal", async () => {
         const mockSetFetchOpen = jest.fn()
         render(<JNLFetch fetchOpen={true}
-                         fetchType={"POST"}
                          setFetchOpen={mockSetFetchOpen}
+                         fetchType={"POST"}
+                         messages={[]}
+                         updateLocalStorage={jest.fn()}
         />)
         expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
         fireEvent.click(await screen.findByText("Close"))
@@ -25,6 +27,8 @@ describe("Fetch tests", () => {
         render(<JNLFetch fetchOpen={true}
                          fetchType={"POST"}
                          setFetchOpen={mockSetFetchOpen}
+                         messages={[]}
+                         updateLocalStorage={jest.fn()}
         />)
         expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
         fireEvent.keyDown(await screen.findByTestId("modal"), {key: "Escape", code: "Escape"})
@@ -38,6 +42,7 @@ describe("Fetch tests", () => {
                          fetchType={"POST"}
                          updateLocalStorage={jest.fn()}
                          setFetchOpen={jest.fn()}
+                         messages={[]}
         />)
         expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
         const modalContainer = await screen.findByTestId("modal")
@@ -50,7 +55,12 @@ describe("Fetch tests", () => {
 
     describe("POST", () => {
         test("renders expected components for POST", async () => {
-            render(<JNLFetch fetchOpen={true} fetchType={"POST"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"POST"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
             expect(screen.getByText("Close")).toBeInTheDocument()
             const modalContainer = screen.getByTestId("modal")
@@ -61,7 +71,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns a 500", async () => {
             mockApiPost(500, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"POST"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"POST"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Fetch"))
@@ -70,7 +85,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns a 403", async () => {
             mockApiPost(403, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"POST"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"POST"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Fetch"))
@@ -79,7 +99,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns a 400", async () => {
             mockApiPost(400, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"POST"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"POST"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Fetch"))
@@ -92,7 +117,12 @@ describe("Fetch tests", () => {
                     throw "some error"
                 }),
             )
-            render(<JNLFetch fetchOpen={true} fetchType={"POST"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"POST"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Fetch"))
@@ -101,7 +131,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns an unknown error", async () => {
             mockApiPost(543, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"POST"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"POST"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Fetch"))
@@ -137,7 +172,6 @@ describe("Fetch tests", () => {
             await waitFor(async () => {
                 expect(await within(modalContainer).findByText("Put")).not.toBeDisabled()
             })
-            console.log(requestBody)
             expect(requestBody.messages).toEqual(JSON.stringify(messages))
             expect(requestBody.pigeonHoleName).toEqual("some name")
             expect(requestBody.pigeonHolePass).toEqual("some pass")
@@ -151,6 +185,7 @@ describe("Fetch tests", () => {
                              fetchType={"POST"}
                              updateLocalStorage={mockUpdateLocalStorage}
                              setFetchOpen={mockSetFetchOpen}
+                             messages={[]}
             />)
             expect(await screen.findByText("Pigeonhole Fetch")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
@@ -167,7 +202,12 @@ describe("Fetch tests", () => {
 
     describe("PUT", () => {
         test("renders expected components for PUT", async () => {
-            render(<JNLFetch fetchOpen={true} fetchType={"PUT"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"PUT"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Put")).toBeInTheDocument()
             const modalContainer = screen.getByTestId("modal")
             expect(within(modalContainer).getByText("Put")).toBeInTheDocument()
@@ -178,7 +218,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns a 500", async () => {
             mockApiPut(500, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"PUT"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"PUT"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Put")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Put"))
@@ -187,7 +232,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns a 403", async () => {
             mockApiPut(403, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"PUT"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"PUT"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Put")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Put"))
@@ -196,7 +246,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns a 400", async () => {
             mockApiPut(400, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"PUT"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"PUT"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Put")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Put"))
@@ -209,7 +264,12 @@ describe("Fetch tests", () => {
                     throw "some error"
                 }),
             )
-            render(<JNLFetch fetchOpen={true} fetchType={"PUT"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"PUT"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Put")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Put"))
@@ -218,7 +278,12 @@ describe("Fetch tests", () => {
 
         test("shows an error when the API returns an unknown error", async () => {
             mockApiPut(543, [])
-            render(<JNLFetch fetchOpen={true} fetchType={"PUT"}/>)
+            render(<JNLFetch fetchOpen={true}
+                             fetchType={"PUT"}
+                             updateLocalStorage={jest.fn()}
+                             setFetchOpen={jest.fn()}
+                             messages={[]}
+            />)
             expect(await screen.findByText("Pigeonhole Put")).toBeInTheDocument()
             const modalContainer = await screen.findByTestId("modal")
             fireEvent.click(await within(modalContainer).findByText("Put"))
@@ -254,7 +319,6 @@ describe("Fetch tests", () => {
             await waitFor(async () => {
                 expect(await within(modalContainer).findByText("Put")).not.toBeDisabled()
             })
-            console.log(requestBody)
             expect(requestBody.messages).toEqual(JSON.stringify(messages))
             expect(requestBody.pigeonHoleName).toEqual("some name")
             expect(requestBody.pigeonHolePass).toEqual("some pass")

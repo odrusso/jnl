@@ -5,7 +5,7 @@ import "@testing-library/jest-dom/extend-expect"
 
 describe("Entry area tests", () => {
     test("renders expected components", async () => {
-        render(<JNLEntry/>)
+        render(<JNLEntry addMessage={jest.fn()}/>)
         const submitButton = await screen.findByTestId("submit-message")
         expect(submitButton.tagName).toBe("svg")
 
@@ -15,7 +15,7 @@ describe("Entry area tests", () => {
     })
 
     test("can type into test area", async () => {
-        render(<JNLEntry/>)
+        render(<JNLEntry addMessage={jest.fn()}/>)
 
         const entryField = screen.getByTestId("entry-message")
         fireEvent.change(entryField, {target: {value: "Some text!"}})
@@ -31,8 +31,8 @@ describe("Entry area tests", () => {
         fireEvent.click(screen.getByTestId("submit-message"))
 
         expect(mockAddMessage.mock.calls.length).toBe(1)
-        expect(mockAddMessage.mock.calls[0][0]).toBe("Some text!")
-        expect(mockAddMessage.mock.calls[0][1]).toMatch(/^[0-9]+:[0-9]+ [0-9]+\/[0-9]+\/[0-9]+$/)
+        expect(mockAddMessage.mock.calls[0][0].text).toBe("Some text!")
+        expect(mockAddMessage.mock.calls[0][0].date).toMatch(/^[0-9]+:[0-9]+ [0-9]+\/[0-9]+\/[0-9]+$/)
     })
 
     test("submitting text resets text in field", async () => {
