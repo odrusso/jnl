@@ -10,7 +10,7 @@ module.exports = {
         filename: 'bundle.js',
     },
     resolve: {
-        extensions: [".jsx", ".js"],
+        extensions: [".jsx", ".js", ".tsx", "ts"],
         modules: [path.join(__dirname, 'src'), 'node_modules'],
         alias: {
             react: path.join(__dirname, 'node_modules', 'react'),
@@ -19,10 +19,10 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(js|jsx|ts|tsx)$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader',
+                    loader: 'ts-loader',
                 },
             },
             {
@@ -43,6 +43,12 @@ module.exports = {
                     name: '[name].[ext]',
                     outputPath: 'fonts/'
                 }
+            },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "source-map-loader"
             }
         ],
     },
@@ -55,4 +61,5 @@ module.exports = {
             favicon: './src/favicon.svg'
         })
     ],
+    devtool: "source-map"
 };

@@ -5,7 +5,7 @@ import "@testing-library/jest-dom/extend-expect"
 
 describe("Entry area tests", () => {
     test("renders expected components", async () => {
-        render(<JNLEntry/>)
+        render(<JNLEntry addMessage={jest.fn()}/>)
         const submitButton = await screen.findByTestId("submit-message")
         expect(submitButton.tagName).toBe("svg")
 
@@ -15,7 +15,7 @@ describe("Entry area tests", () => {
     })
 
     test("can type into test area", async () => {
-        render(<JNLEntry/>)
+        render(<JNLEntry addMessage={jest.fn()}/>)
 
         const entryField = screen.getByTestId("entry-message")
         fireEvent.change(entryField, {target: {value: "Some text!"}})

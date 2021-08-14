@@ -44,7 +44,7 @@ describe("Application tests", () => {
         expect(entryField).toHaveTextContent("")
         expect(await screen.findByText("Some text!")).toBeInTheDocument()
 
-        const entry = JSON.parse(localStorage.getItem("messages"))
+        const entry = JSON.parse(localStorage.getItem("messages")!)
         expect(entry[0].text).toEqual("Some text!")
     })
 
