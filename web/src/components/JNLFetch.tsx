@@ -18,96 +18,93 @@ export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLo
     const [fetchError, setFetchError] = useState('')
     const [fetchButtonEnabled, setFetchButtonEnabled] = useState(true)
 
-    const handlePut = () => {
+    const handlePut = async () => {
         setFetchButtonEnabled(false)
         setFetchError('')
-        fetch(
-            fetchApi,
-            {
-                method: 'put',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'pigeonHoleName': fetchName,
-                    'pigeonHolePass': fetchPassword,
-                    'messages': JSON.stringify(messages)
+        try {
+            const fetchResponse = await fetch(
+                fetchApi,
+                {
+                    method: 'put',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'pigeonHoleName': fetchName,
+                        'pigeonHolePass': fetchPassword,
+                        'messages': JSON.stringify(messages)
+                    })
                 })
-            })
-            .then(res => {
-                switch(res.status) {
-                    case 201:
-                        res.json().then(() => {
-                            setFetchButtonEnabled(true)
-                            setFetchPassword('')
-                            setFetchOpen(false)
-                        })
-                        break;
-                    case 500:
-                        setFetchError('Server error')
-                        break;
-                    case 403:
-                        setFetchError('Invalid credentials')
-                        break;
-                    case 400:
-                        setFetchError('Bad request error')
-                        break;
-                    default:
-                        setFetchError(`Unknown error ${res.status}`)
-                }
-                setFetchButtonEnabled(true)
-            })
-            .catch(() => {
-                setFetchError("Unknown error")
-                setFetchButtonEnabled(true)
-            })
+
+            switch (fetchResponse.status) {
+                case 201:
+                    setFetchButtonEnabled(true)
+                    setFetchPassword('')
+                    setFetchOpen(false)
+                    break;
+                case 500:
+                    setFetchError('Server error')
+                    break;
+                case 403:
+                    setFetchError('Invalid credentials')
+                    break;
+                case 400:
+                    setFetchError('Bad request error')
+                    break;
+                default:
+                    setFetchError(`Unknown error ${fetchResponse.status}`)
+            }
+        } catch (e) {
+            console.error(e)
+            setFetchError("Unknown error")
+        }
+        setFetchButtonEnabled(true)
     }
 
-    const handleFetch = () => {
+    const handleFetch = async () => {
         setFetchButtonEnabled(false)
         setFetchError('')
-        fetch(
-            fetchApi,
-            {
-                method: 'post',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'pigeonHoleName': fetchName,
-                    'pigeonHolePass': fetchPassword
+        try {
+            const fetchResponse = await fetch(
+                fetchApi,
+                {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'pigeonHoleName': fetchName,
+                        'pigeonHolePass': fetchPassword
+                    })
                 })
-            })
-            .then(res => {
-                switch(res.status) {
-                    case 200:
-                        res.json().then((data: JNLMessage[]) => {
-                            updateLocalStorage(data)
-                            setFetchButtonEnabled(true)
-                            setFetchPassword('')
-                            setFetchOpen(false)
-                        })
-                        break;
-                    case 500:
-                        setFetchError('Server error')
-                        break;
-                    case 403:
-                        setFetchError('Invalid credentials')
-                        break;
-                    case 400:
-                        setFetchError('Bad request error')
-                        break;
-                    default:
-                        setFetchError(`Unknown error ${res.status}`)
+            switch (fetchResponse.status) {
+                case 200: {
+                    const responseJson: JNLMessage[] = await fetchResponse.json()
+                    updateLocalStorage(responseJson)
+                    setFetchButtonEnabled(true)
+                    setFetchPassword('')
+                    setFetchOpen(false)
+                    break;
                 }
-                setFetchButtonEnabled(true)
-            })
-            .catch(() => {
-                setFetchError("Unknown error")
-                setFetchButtonEnabled(true)
-            })
+                case 500:
+                    setFetchError('Server error')
+                    break;
+                case 403:
+                    setFetchError('Invalid credentials')
+                    break;
+                case 400:
+                    setFetchError('Bad request error')
+                    break;
+                default:
+                    setFetchError(`Unknown error ${fetchResponse.status}`)
+            }
+        } catch (e) {
+            console.error(e)
+            setFetchError("Unknown error")
+        }
+        setFetchButtonEnabled(true)
     }
 
     const displayMode = fetchType === 'POST' ? 'Fetch' : 'Put'
