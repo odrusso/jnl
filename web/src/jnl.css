@@ -1,11 +1,15 @@
 @font-face {
     font-family: 'go-bold';
-    src: url('./fonts/Go-Mono-Bold.ttf')
+    src: url('./fonts/Go-Mono-Bold.ttf');
+    font-display: swap;
+    font-style: normal;
 }
 
 @font-face {
     font-family: 'go';
-    src: url('./fonts/Go-Mono.ttf')
+    src: url('./fonts/Go-Mono.ttf');
+    font-display: swap;
+    font-style: normal;
 }
 
 html {
