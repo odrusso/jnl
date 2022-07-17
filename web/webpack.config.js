@@ -46,7 +46,9 @@ module.exports = {
         ],
     },
     devServer: {
-        contentBase: './build',
+        static: {
+            directory: './build',
+        },
     },
     plugins: [
         new HtmlWebPackPlugin({
