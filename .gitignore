@@ -3,5 +3,4 @@
 .DS_Store
 /app/package/
 /app/__pycache__/
-/web/package-lock.json
 /web/dist
