@@ -21,6 +21,7 @@ body {
 
 .header a {
     margin-right: 30px;
+    text-shadow: 0 0 10px black;
 }
 
 .header a:any-link {
