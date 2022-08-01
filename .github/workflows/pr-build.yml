@@ -1,0 +1,52 @@
+name: Build, test, and deploy to Stage
+on: [ pull_request ]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.STAGE_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGE_AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+
+#      - uses: actions/setup-python@v2
+#        with:
+#          python-version: '3.8'
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.3'
+
+      - name: Install dependencies
+        working-directory: ./web
+        run: npm i
+
+      - name: Test Frontend
+        working-directory: ./web
+        run: npx tsc && npm run test
+
+      - name: Build
+        working-directory: ./web
+        run: npm run build
+
+      - name: Deploy Frontend
+        uses: reggionick/s3-deploy@v3
+        if: github.ref == 'refs/heads/master'
+        with:
+          folder: ./web/build
+          bucket: ${{ secrets.STAGE_S3_BUCKET }}
+          bucket-region: us-east-1
+          dist-id: ${{ secrets.STAGE_CF_DISTRIBUTION_ID }}
+          invalidation: /*
+
+#      - name: Test Backend
+#        run: pip install -r requirements.txt && python -m unittest
+#        working-directory: ./app
+#
+#      - name: Build and Deploy Backend
+#        if: github.ref == 'refs/heads/master'
+#        run: sh update.sh jnl-app
+#        working-directory: ./app
+#        env:
+#          AWS_DEFAULT_REGION: us-east-1

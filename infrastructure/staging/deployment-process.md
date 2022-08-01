@@ -1,0 +1,6 @@
+- Deploy Route53 Hosted Zone CF
+  - Update parent account with DNS records from created zone
+- Deploy S3 bucket CF
+  - Add FE DNS records from SSL certificate to Route53 Hosted Zone
+- Deploy Lambda CF
+  - Add BE DNS records from SSL certification to Route53 Hosted Zone 

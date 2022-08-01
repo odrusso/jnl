@@ -28,7 +28,7 @@ class HttpResponse:
 
 def main(event, context):
     body = json.loads(event['body'])
-    method = event['httpMethod']
+    method = event['requestContext']['http']['method']
     if method == 'POST':
         return get_pigeonhole(body).json()
     elif method == 'PUT':
@@ -72,13 +72,14 @@ def put_pigeonhole(body) -> HttpResponse:
 
     pigeonhole = dynamo.get_pigeonhole_data(input_pigeon_hole_name)
 
+    # Pigeon hole exists, so we need to make sure the passwords matches
     if pigeonhole is not None:
         password_valid = crypto.verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
         if not password_valid:
             print(f"Invalid password for pigeonhole {input_pigeon_hole_name}")
             return HttpResponse("Invalid request body", 403)
 
-    print(f"Pigeon hole doesn't exist: {input_pigeon_hole_name}")
+    # TODO: Validate messages schema
 
     new_hash, new_salt = crypto.create_new_hash_for_password(input_password)
     dynamo.new_pigeonhole(input_pigeon_hole_name, new_hash, new_salt, messages)

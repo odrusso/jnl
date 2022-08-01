@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  s3SPAArn:
+    Type: String
+  cloudfrontArn:
+    Type: String
+  s3APIArn:
+    Type: String
+  cloudformationApiArn:
+    Type: String
+
+Resources:
+  deploymentUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: actions-deployment-user
+      Policies:
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - s3:PutObject
+                Effect: Allow
+                Resource: !Ref s3SPAArn
+          PolicyName: actions-deployment-user-s3-spa
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - cloudfront:CreateInvalidation
+                Effect: Allow
+                Resource: !Ref cloudfrontArn
+          PolicyName: actions-deployment-user-cloudfront-spa
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - s3:PutObject
+                Effect: Allow
+                Resource: !Ref s3APIArn
+          PolicyName: actions-deployment-user-s3-api
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - cloudformation:UpdateStack
+                Effect: Allow
+                Resource: !Ref cloudformationApiArn
+          PolicyName: actions-deployment-user-cloudfront-api
+
+  accessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref deploymentUser
+
+Outputs:
+  userKey:
+    Value: !Ref accessKey
+  userSecret:
+    Value: !GetAtt accessKey.SecretAccessKey
