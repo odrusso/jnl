@@ -32,7 +32,6 @@ jobs:
 
       - name: Deploy Frontend
         uses: reggionick/s3-deploy@v3
-        if: github.ref == 'refs/heads/master'
         with:
           folder: ./web/build
           bucket: ${{ secrets.STAGE_S3_BUCKET }}
