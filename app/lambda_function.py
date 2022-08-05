@@ -13,26 +13,36 @@ PIGEON_HOLE_MESSAGES_KEY = "messages"
 
 
 class HttpResponse:
-    def __init__(self, body: str = "", status: int = 200):
+    def __init__(self, body: str = "", status: int = 200, extraHeaders = {}):
         self.statusCode = status
         self.body = body
-        self.headers = {
+        self.headers = {**{
             'Access-Control-Allow-Headers': 'Content-Type',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST,PUT'
-        }
+        }, **extraHeaders}
 
     def json(self) -> dict:
-        return self.__dict__
+        objectDict = self.__dict__
+
+        if self.body != "":
+            objectDict['body'] = self.body  # override structured body with stringified body
+        else:
+             del objectDict['body']
+
+        return objectDict
 
 
 def main(event, context):
-    body = json.loads(event['body'])
     method = event['requestContext']['http']['method']
     if method == 'POST':
+        body = json.loads(event['body'])
         return get_pigeonhole(body).json()
     elif method == 'PUT':
+        body = json.loads(event['body'])
         return put_pigeonhole(body).json()
+    elif method == 'OPTIONS':
+        return HttpResponse().json()
     else:
         return HttpResponse(status=405).json()
 

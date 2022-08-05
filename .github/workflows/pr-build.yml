@@ -28,7 +28,7 @@ jobs:
 
       - name: Build
         working-directory: ./web
-        run: npm run build
+        run: npm run build-stage
 
       - name: Deploy Frontend
         uses: reggionick/s3-deploy@v3

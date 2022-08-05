@@ -1,11 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
-  s3SPAArn:
-    Type: String
   cloudfrontArn:
-    Type: String
-  s3APIArn:
     Type: String
   cloudformationApiArn:
     Type: String
@@ -20,10 +16,10 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Action:
-                  - s3:PutObject
+                  - s3:*
                 Effect: Allow
-                Resource: !Ref s3SPAArn
-          PolicyName: actions-deployment-user-s3-spa
+                Resource: arn:aws:s3:::*/*
+          PolicyName: actions-deployment-user-s3
         - PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -32,14 +28,6 @@ Resources:
                 Effect: Allow
                 Resource: !Ref cloudfrontArn
           PolicyName: actions-deployment-user-cloudfront-spa
-        - PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Action:
-                  - s3:PutObject
-                Effect: Allow
-                Resource: !Ref s3APIArn
-          PolicyName: actions-deployment-user-s3-api
         - PolicyDocument:
             Version: 2012-10-17
             Statement:

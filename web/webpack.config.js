@@ -2,6 +2,7 @@
 const path = require('path');
 // eslint-disable-next-line no-undef
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const {EnvironmentPlugin} = require("webpack");
 
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -54,7 +55,8 @@ module.exports = {
         new HtmlWebPackPlugin({
             template: './src/index.html',
             favicon: './src/favicon.svg'
-        })
+        }),
+        new EnvironmentPlugin(['API_URL'])
     ],
     devtool: "source-map"
 };

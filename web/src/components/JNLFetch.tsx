@@ -2,8 +2,6 @@ import {Button, Modal} from "react-bootstrap";
 import React, {useState} from "react";
 import {JNLMessage} from "./JNLMessages";
 
-const fetchApi = 'https://api.jnlapp.io/messages'
-
 type JNLFetchProps = {
     fetchOpen: boolean,
     setFetchOpen: (bool: boolean) => void,
@@ -13,6 +11,8 @@ type JNLFetchProps = {
 }
 
 export const JNLFetch = ({fetchOpen, setFetchOpen, fetchType, messages, updateLocalStorage}: JNLFetchProps): JSX.Element => {
+    const fetchApi = process.env.API_URL!;
+
     const [fetchName, setFetchName] = useState('')
     const [fetchPassword, setFetchPassword] = useState('')
     const [fetchError, setFetchError] = useState('')
