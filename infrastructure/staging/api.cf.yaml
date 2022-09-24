@@ -133,18 +133,15 @@ Resources:
         Version: 2012-10-17
         Statement:
           - Action:
-              - 's3:GetObject'
+              - 's3:*'
             Effect: Allow
             Resource: !Join
               - ''
               - - 'arn:aws:s3:::'
                 - !Ref lambdaBucket
                 - /*
-            Principal: '*'
-            Condition:
-              ArnEquals:
-                aws:PrincipalArn:
-                  - !GetAtt lambdaFunction.Arn
+            Principal:
+              AWS: !Sub ${AWS::AccountId}
 
   messagesDynamoTable:
     Type: AWS::DynamoDB::Table
