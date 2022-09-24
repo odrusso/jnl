@@ -63,7 +63,7 @@ jobs:
           # Update CF with new version
           aws cloudformation update-stack \
             --stack-name api \
-            --use-previous-template 
+            --use-previous-template \
             --capabilities CAPABILITY_IAM \
             --parameters \
               ParameterKey=s3CodeVersion,ParameterValue=$NEW_VERSION \
