@@ -69,7 +69,8 @@ jobs:
               ParameterKey=s3CodeVersion,ParameterValue=$NEW_VERSION \
               ParameterKey=hostedZoneId,UsePreviousValue=true \
               ParameterKey=lambdaBucket,UsePreviousValue=true \
-              ParameterKey=apiDomain,UsePreviousValue=true
+              ParameterKey=apiDomain,UsePreviousValue=true \
+              ParameterKey=environment,UsePreviousValue=true
 
           # Wait for update
           aws cloudformation wait stack-update-complete --stack-name ${{ secrets.STAGE_API_CF_NAME }}

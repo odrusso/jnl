@@ -6,6 +6,9 @@ Parameters:
     Default: stage.jnlapp.io
   hostedZoneId:
     Type: AWS::Route53::HostedZone::Id
+  environment:
+    Type: String
+    Default: stage
 
 Resources:
   sslCert:
@@ -52,7 +55,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
-      BucketName: jnl-staging-static-s3-bucket
+      BucketName: !Sub '${environment}-jnl-static-s3-bucket'
 
   s3StaticPolicy:
     Type: AWS::S3::BucketPolicy

@@ -9,12 +9,15 @@ Parameters:
   apiDomain:
     Type: String
     Default: api.stage.jnlapp.io
+  environment:
+    Type: String
+    Default: stage
 
 Resources:
   apiGatewayV2:
     Type: AWS::ApiGatewayV2::Api
     Properties:
-      Name: jnl-staging-api-gateway
+      Name: !Sub '${environment}-jnl-api-gateway'
       ProtocolType: HTTP
       Target: !Sub
         - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
@@ -67,7 +70,7 @@ Resources:
       Role: !GetAtt lambdaRole.Arn
       Runtime: python3.8
       Handler: lambda_function.main
-      FunctionName: jnl-staging-api
+      FunctionName: !Sub '${environment}-jnl-api'
       MemorySize: 1024
       Environment:
         Variables:
@@ -103,7 +106,7 @@ Resources:
                   - logs:PutLogEvents
                 Effect: Allow
                 Resource:
-                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/jnl-staging-api:*
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${environment}-jnl-api:*
           PolicyName: lambda
         - PolicyDocument:
             Version: 2012-10-17
@@ -121,7 +124,7 @@ Resources:
   lambdaLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /aws/lambda/jnl-staging-api
+      LogGroupName: !Sub '/aws/lambda/${environment}-jnl-api'
       RetentionInDays: 180
 
   messagesDynamoTable:
