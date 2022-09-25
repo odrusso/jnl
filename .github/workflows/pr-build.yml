@@ -72,7 +72,7 @@ jobs:
               ParameterKey=apiDomain,UsePreviousValue=true
 
           # Wait for update
-          aws cloudformation wait stack-update-complete --stack-name api
+          aws cloudformation wait stack-update-complete --stack-name ${{ secrets.STAGE_API_CF_NAME }}
 
         env:
           AWS_DEFAULT_REGION: us-east-1
