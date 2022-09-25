@@ -62,7 +62,7 @@ jobs:
 
           # Update CF with new version
           aws cloudformation update-stack \
-            --stack-name api \
+            --stack-name ${{ secrets.STAGE_API_CF_NAME }} \
             --use-previous-template \
             --capabilities CAPABILITY_IAM \
             --parameters \
