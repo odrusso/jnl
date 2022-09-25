@@ -1,5 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Parameters:
+  environment:
+    Type: String
+    Default: stage
+
 Resources:
   lambdaBucket:
     Type: AWS::S3::Bucket
