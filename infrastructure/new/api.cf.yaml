@@ -4,6 +4,11 @@ Parameters:
     Type: String
   hostedZoneId:
     Type: AWS::Route53::HostedZone::Id
+  lambdaBucket:
+    Type: String
+  apiDomain:
+    Type: String
+    Default: api.stage.jnlapp.io
 
 Resources:
   apiGatewayV2:
@@ -18,16 +23,16 @@ Resources:
   sslCert:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: api.stage.jnlapp.io
+      DomainName: !Ref apiDomain
       DomainValidationOptions:
-        - DomainName: api.stage.jnlapp.io
-          ValidationDomain: api.stage.jnlapp.io
+        - DomainName: !Ref apiDomain
+          ValidationDomain: !Ref apiDomain
       ValidationMethod: DNS
 
   apiGatewayDomain:
     Type: 'AWS::ApiGatewayV2::DomainName'
     Properties:
-      DomainName: api.stage.jnlapp.io
+      DomainName: !Ref apiDomain
       DomainNameConfigurations:
         - EndpointType: REGIONAL
           CertificateArn: !Ref sslCert
@@ -36,14 +41,16 @@ Resources:
     Type: AWS::ApiGatewayV2::ApiMapping
     Properties:
       ApiId: !Ref apiGatewayV2
-      DomainName: api.stage.jnlapp.io
+      DomainName: !Ref apiDomain
       Stage: $default
+    DependsOn:
+      - apiGatewayDNS
 
   apiGatewayDNS:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref hostedZoneId
-      Name: api.stage.jnlapp.io
+      Name: !Ref apiDomain
       AliasTarget:
         DNSName: !GetAtt apiGatewayDomain.RegionalDomainName
         HostedZoneId: !GetAtt apiGatewayDomain.RegionalHostedZoneId
@@ -116,32 +123,6 @@ Resources:
     Properties:
       LogGroupName: !Sub /aws/lambda/jnl-staging-api
       RetentionInDays: 180
-
-  lambdaBucket:
-    Type: AWS::S3::Bucket
-    DeletionPolicy: Delete
-    Properties:
-      BucketName: jnl-api-lambda-code
-      VersioningConfiguration:
-        Status: Enabled
-
-  lambdaBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref lambdaBucket
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - 's3:*'
-            Effect: Allow
-            Resource: !Join
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref lambdaBucket
-                - /*
-            Principal:
-              AWS: !Sub ${AWS::AccountId}
 
   messagesDynamoTable:
     Type: AWS::DynamoDB::Table

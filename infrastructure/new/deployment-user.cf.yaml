@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  deploymentUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: actions-deployment-user
+      Policies:
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - '*'
+                Effect: Allow
+                Resource: '*'
+          PolicyName: actions-deployment-god-mode
+
+  accessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref deploymentUser
+
+Outputs:
+  userKey:
+    Value: !Ref accessKey
+  userSecret:
+    Value: !GetAtt accessKey.SecretAccessKey
