@@ -39,7 +39,7 @@ jobs:
         with:
           folder: ./web/build
           bucket: ${{ secrets.PROD_S3_BUCKET }}
-          bucket-region: us-east-1
+          bucket-region: ap-southeast-2
           dist-id: ${{ secrets.PROD_CF_DISTRIBUTION_ID }}
           invalidation: /*
 
