@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  domainName:
+    Type: String
+    Default: stage.jnlapp.io
+
+Resources:
+  sslCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref domainName
+      DomainValidationOptions:
+        - DomainName: !Ref domainName
+          ValidationDomain: !Ref domainName
+      ValidationMethod: DNS

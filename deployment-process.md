@@ -1,8 +1,9 @@
 ## Infra creation
 1. **Deploy Route53 Hosted Zone CF (_dns.cf.json_)** 
    1. Get the NS servers from the deployed R53 zone, and then create a new record set on the root account with an NS record pointing to those NS servers
-2. **Deploy FE CF (_spa.cf.yaml_)** 
-   1. As it's deploying, add FE DNS records from SSL certificate to Route53 Hosted Zone 
+2. **Deploy FE CF (_spa-cert.cf.yaml_ & _spa.cf.yaml_)** 
+   1. The cert stack must be deployed in `us-east-1`, while the other main spa stack can be in any region
+   2. As the cert stack deploying, add FE DNS records from SSL certificate to Route53 Hosted Zone
 3. **Deploy API CF (_api-s3.cf.yaml & api.cf.yaml_)** 
    1. First deploy the S3 template, and upload a `deployment.zip` file to it
    2. As it's deploying, Add BE DNS records from SSL certification to Route53 Hosted Zone

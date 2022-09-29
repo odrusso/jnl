@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env API_URL=https://api.stage.jnlapp.io/ webpack serve --mode=development --open --hot",
-    "build": "cross-env API_URL=https://api.jnlapp.io/messages webpack --mode=production",
+    "build-prod": "cross-env API_URL=https://api.app.jnlapp.io/ webpack --mode=production",
     "build-stage": "cross-env API_URL=https://api.stage.jnlapp.io/ webpack --mode=production",
     "test": "jest"
   },

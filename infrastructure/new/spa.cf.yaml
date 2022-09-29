@@ -9,17 +9,10 @@ Parameters:
   environment:
     Type: String
     Default: stage
+  sslCert:
+    Type: String
 
 Resources:
-  sslCert:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: !Ref domainName
-      DomainValidationOptions:
-        - DomainName: !Ref domainName
-          ValidationDomain: !Ref domainName
-      ValidationMethod: DNS
-
   distribution:
     Type: AWS::CloudFront::Distribution
     Properties:
