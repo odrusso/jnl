@@ -13,26 +13,36 @@ PIGEON_HOLE_MESSAGES_KEY = "messages"
 
 
 class HttpResponse:
-    def __init__(self, body: str = "", status: int = 200):
+    def __init__(self, body: str = "", status: int = 200, extraHeaders = {}):
         self.statusCode = status
         self.body = body
-        self.headers = {
+        self.headers = {**{
             'Access-Control-Allow-Headers': 'Content-Type',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST,PUT'
-        }
+        }, **extraHeaders}
 
     def json(self) -> dict:
-        return self.__dict__
+        objectDict = self.__dict__
+
+        if self.body != "":
+            objectDict['body'] = self.body  # override structured body with stringified body
+        else:
+             del objectDict['body']
+
+        return objectDict
 
 
 def main(event, context):
-    body = json.loads(event['body'])
-    method = event['httpMethod']
+    method = event['requestContext']['http']['method']
     if method == 'POST':
+        body = json.loads(event['body'])
         return get_pigeonhole(body).json()
     elif method == 'PUT':
+        body = json.loads(event['body'])
         return put_pigeonhole(body).json()
+    elif method == 'OPTIONS':
+        return HttpResponse().json()
     else:
         return HttpResponse(status=405).json()
 
@@ -72,13 +82,14 @@ def put_pigeonhole(body) -> HttpResponse:
 
     pigeonhole = dynamo.get_pigeonhole_data(input_pigeon_hole_name)
 
+    # Pigeon hole exists, so we need to make sure the passwords matches
     if pigeonhole is not None:
         password_valid = crypto.verify_password_for_pigeonhole(input_pigeon_hole_name, input_password)
         if not password_valid:
             print(f"Invalid password for pigeonhole {input_pigeon_hole_name}")
             return HttpResponse("Invalid request body", 403)
 
-    print(f"Pigeon hole doesn't exist: {input_pigeon_hole_name}")
+    # TODO: Validate messages schema
 
     new_hash, new_salt = crypto.create_new_hash_for_password(input_password)
     dynamo.new_pigeonhole(input_pigeon_hole_name, new_hash, new_salt, messages)

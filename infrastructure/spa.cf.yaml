@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  domainName:
+    Type: String
+    Default: stage.jnlapp.io
+  hostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+  environment:
+    Type: String
+    Default: stage
+  sslCert:
+    Type: String
+
+Resources:
+  distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref domainName
+        DefaultRootObject: index.html
+        Enabled: true
+        Origins:
+          - DomainName: !Join [ '', [ !Ref s3Static, '.s3.amazonaws.com' ] ]
+            Id: the-s3-bucket
+            S3OriginConfig:
+              OriginAccessIdentity:
+                !Join [ '', [ 'origin-access-identity/cloudfront/', !Ref distributionAccessIdentity ] ]
+        DefaultCacheBehavior:
+          Compress: true
+          TargetOriginId: the-s3-bucket
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        ViewerCertificate:
+          AcmCertificateArn: !Ref sslCert
+          MinimumProtocolVersion: TLSv1
+          SslSupportMethod: sni-only
+
+  distributionAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'CloudFront OAI for ${domainName}'
+
+  s3Static:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub '${environment}-jnl-static-s3-bucket'
+
+  s3StaticPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref s3Static
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref s3Static, '/*']]
+            Principal:
+              CanonicalUser: !GetAtt distributionAccessIdentity.S3CanonicalUserId
+
+  cloudfrontDns:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref hostedZoneId
+      Name: !Ref domainName
+      AliasTarget:
+        DNSName: !GetAtt distribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2 # Fixed value. See https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html
+        EvaluateTargetHealth: false
+      Type: A

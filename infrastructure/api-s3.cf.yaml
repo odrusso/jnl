@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  environment:
+    Type: String
+    Default: stage
+
+Resources:
+  lambdaBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub '${environment}-jnl-api-lambda-code'
+      VersioningConfiguration:
+        Status: Enabled
+
+  lambdaBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref lambdaBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 's3:*'
+            Effect: Allow
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref lambdaBucket
+                - /*
+            Principal:
+              AWS: !Sub ${AWS::AccountId}
