@@ -4,8 +4,9 @@
   "description": "Pragmatic journelling webapp",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --mode=development --open --hot",
-    "build": "webpack --mode=production",
+    "start": "cross-env API_URL=https://api.stage.jnlapp.io/ webpack serve --mode=development --open --hot",
+    "build-prod": "cross-env API_URL=https://api.app.jnlapp.io/ webpack --mode=production",
+    "build-stage": "cross-env API_URL=https://api.stage.jnlapp.io/ webpack --mode=production",
     "test": "jest"
   },
   "repository": {
@@ -35,6 +36,7 @@
     "@typescript-eslint/parser": "^4.29.1",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.0.6",
+    "cross-env": "^7.0.3",
     "eslint": "^7.19.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
