@@ -1,7 +1,7 @@
 name: Build, test, and deploy to Stage
 on: [ pull_request ]
 jobs:
-  run:
+  api:
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.STAGE_AWS_ACCESS_KEY_ID }}
@@ -12,32 +12,6 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8'
-
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14.3'
-
-      - name: Install dependencies
-        working-directory: ./web
-        run: npm i
-
-      - name: Test Frontend
-        working-directory: ./web
-        run: npx tsc && npm run test
-
-      - name: Build
-        working-directory: ./web
-        run: npm run build-stage
-
-      - name: Deploy Frontend
-        uses: reggionick/s3-deploy@v3
-        with:
-          folder: ./web/build
-          bucket: ${{ secrets.STAGE_S3_BUCKET }}
-          bucket-region: us-east-1
-          dist-id: ${{ secrets.STAGE_CF_DISTRIBUTION_ID }}
-          invalidation: /*
 
       - name: Test Backend
         run: pip install -r requirements.txt && python -m unittest
@@ -70,10 +44,44 @@ jobs:
               ParameterKey=hostedZoneId,UsePreviousValue=true \
               ParameterKey=lambdaBucket,UsePreviousValue=true \
               ParameterKey=apiDomain,UsePreviousValue=true \
-              ParameterKey=environment,UsePreviousValue=true
+              ParameterKey=environment,UsePreviousValue=true \
+              ParameterKey=signingSecretString,UsePreviousValue=true
 
           # Wait for update
           aws cloudformation wait stack-update-complete --stack-name ${{ secrets.STAGE_API_CF_NAME }}
 
         env:
           AWS_DEFAULT_REGION: us-east-1
+  spa:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.STAGE_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGE_AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.3'
+
+      - name: Install dependencies
+        working-directory: ./web
+        run: npm i
+
+      - name: Test Frontend
+        working-directory: ./web
+        run: npx tsc && npm run test
+
+      - name: Build
+        working-directory: ./web
+        run: npm run build-stage
+
+      - name: Deploy Frontend
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: ./web/build
+          bucket: ${{ secrets.STAGE_S3_BUCKET }}
+          bucket-region: us-east-1
+          dist-id: ${{ secrets.STAGE_CF_DISTRIBUTION_ID }}
+          invalidation: /*

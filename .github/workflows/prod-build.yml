@@ -75,7 +75,8 @@ jobs:
               ParameterKey=hostedZoneId,UsePreviousValue=true \
               ParameterKey=lambdaBucket,UsePreviousValue=true \
               ParameterKey=apiDomain,UsePreviousValue=true \
-              ParameterKey=environment,UsePreviousValue=true
+              ParameterKey=environment,UsePreviousValue=true \
+              ParameterKey=signingSecretString,UsePreviousValue=true
 
           # Wait for update
           aws cloudformation wait stack-update-complete --stack-name ${{ secrets.PROD_API_CF_NAME }} 

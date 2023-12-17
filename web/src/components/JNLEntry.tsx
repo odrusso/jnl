@@ -1,41 +1,50 @@
-import React, {useState} from "react";
-import {CheckCircleFill} from "react-bootstrap-icons";
-import {JNLMessage} from "./JNLMessages";
+import React, {useContext, useRef} from "react";
+import {TextField} from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import {Message, MessagesContext} from "../contexts/MessagesContext";
 
-type JNLEntryProps = {
-    addMessage: (message: JNLMessage) => void
-}
+export const JNLEntry = (): JSX.Element => {
+    const messageRef = useRef<HTMLTextAreaElement>(null);
+    const messagesContext = useContext(MessagesContext);
 
-export const JNLEntry = ({addMessage}: JNLEntryProps): JSX.Element => {
+    const twosf = (n: number) => {
+        return String(n).padStart(2, '0')
+    }
 
-    const [message, setMessage] = useState('')
-
-    const handleSubmit = (e) => {
-        // Appends message to messages
-        if (message !== '') {
+    const handleSubmit = async (e) => {
+        const message = messageRef.current?.value;
+        if (message) {
             const now = new Date()
-            const timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`
-            addMessage({text: message, date: timeString})
+            const timeString = `${twosf(now.getHours())}:${twosf(now.getMinutes())} ${twosf(now.getDate())}/${twosf(now.getMonth() + 1)}/${now.getFullYear()}`
+            const newMessage: Message = {text: message, date: timeString}
+            messagesContext!.addMessage(newMessage)
         }
-        setMessage('')
+        messageRef.current!.value = '';
         e.preventDefault()
     }
 
     return (
         <div className={'form-area'}>
             <form onSubmit={handleSubmit}>
-                <textarea
-                    className="form-text p-4"
-                    key="jnl-text-area"
-                    value={message}
+                <TextField
+                    placeholder={"Go for it!"}
+                    variant={'filled'}
+                    inputRef={messageRef}
+                    multiline
+                    rows={8}
                     data-testid={"entry-message"}
                     aria-label={"message entry"}
-                    onChange={(e) => setMessage(e.target.value)}/>
+                    fullWidth />
+
                 <br/>
                 <br/>
 
                 <div style={{textAlign: "center"}}>
-                    <CheckCircleFill size={"32px"} data-testid={"submit-message"} onClick={handleSubmit}/>
+                    <AddCircleIcon
+                        fontSize={"large"}
+                        color={"primary"}
+                        data-testid={"submit-message"}
+                        onClick={handleSubmit} />
                 </div>
             </form>
         </div>
