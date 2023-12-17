@@ -13,8 +13,8 @@
 }
 
 :root {
-    --background-color: rgb(176, 171, 155);
-    --card-color: rgb(255, 252, 246);
+    --background-color: rgb(239, 228, 205);
+    --card-color: rgba(255, 252, 246, 0.97);
     --text-entry-background-color: rgb(255, 255, 255);
     --base-text-color: rgb(81, 81, 81);
     --base-text-hover-color: rgb(255, 255, 255);
@@ -22,23 +22,20 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background-color: rgb(18, 18, 18);
-        --card-color: rgb(31, 31, 31);
+        --background-color: rgb(33, 38, 51);
+        --card-color: rgba(31, 31, 31, 0.97);
         --text-entry-background-color: rgba(255, 255, 255, 0.08);
         --base-text-color: rgb(255, 255, 255);
         --base-text-hover-color: rgb(81, 81, 81);
     }
 }
 
-html {
-    margin: 0;
-    background-color: var(--background-color);
-}
-
 body {
     font-family: go-bold, monospace;
     color: var(--card-color);
-    background-color: transparent;
+    background-color: var(--background-color);
+    margin: 0;
+    background-size: 200vw 200vh;
 }
 
 .header a {
@@ -52,6 +49,104 @@ body {
 
 .header a:hover {
     color: var(--base-text-hover-color);
+}
+
+.background-waves {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 200vw;
+    height: 200vh;
+    scale: 110%;
+    z-index: -9999;
+}
+
+@keyframes wavebounce_first {
+    0% {
+        transform: rotate(0deg) scaleY(100%) scale(100%);
+    }
+    50% {
+        transform: rotate(2deg) scaleY(105%) scale(107%);
+    }
+    100% {
+        transform: rotate(0deg) scaleY(100%) scale(100%);
+    }
+}
+
+.background-waves .first {
+    animation-name: wavebounce_first;
+    animation-duration: 33s;
+    animation-direction: normal;
+    animation-iteration-count: infinite;
+    animation-delay: 25ms;
+}
+
+@keyframes wavebounce_second {
+    0% {
+        transform: rotate(0deg) translateY(0px) scale(100%);
+    }
+    50% {
+        transform: rotate(-2deg) translateY(-4px) scale(103%);
+    }
+    100% {
+        transform: rotate(0deg) translateY(0px) scale(100%);
+    }
+}
+
+.background-waves .second {
+    animation-name: wavebounce_second;
+    animation-duration: 38s;
+    animation-direction: normal;
+    animation-iteration-count: infinite;
+    animation-delay: 55ms
+}
+
+@keyframes wavebounce_third {
+    0% {
+        transform: rotate(0deg) translateY(0px) scale(100%);
+    }
+    50% {
+        transform: rotate(-1deg) translateY(-2px) scale(106%);
+    }
+    100% {
+        transform: rotate(0deg) translateY(0px) scale(100%);
+    }
+}
+
+.background-waves .third {
+    animation-name: wavebounce_third;
+    animation-duration: 27s;
+    animation-direction: normal;
+    animation-iteration-count: infinite;
+    animation-delay: 0ms
+}
+
+@keyframes wavebounce_fourth {
+    0% {
+        transform: rotate(0deg) translateX(0px) scale(100%);
+    }
+    50% {
+        transform: rotate(-1deg) translateX(3px) scale(101%);
+    }
+    100% {
+        transform: rotate(0deg) translateX(0px) scale(100%);
+    }
+}
+
+.background-waves .fourth {
+    animation-name: wavebounce_fourth;
+    animation-duration: 48s;
+    animation-direction: normal;
+    animation-iteration-count: infinite;
+    animation-delay: 120ms
+}
+
+
+
+.header button {
+    margin-right: 30px;
+    color: var(--base-text-color) !important;
 }
 
 .app {

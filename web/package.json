@@ -51,6 +51,10 @@
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.6",
+    "@mui/material": "^5.10.7",
     "babel-loader": "^8.2.2",
     "bootstrap": "^4.6.0",
     "css-loader": "6.5.1",
