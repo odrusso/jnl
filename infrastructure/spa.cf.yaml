@@ -37,6 +37,11 @@ Resources:
           AcmCertificateArn: !Ref sslCert
           MinimumProtocolVersion: TLSv1
           SslSupportMethod: sni-only
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ErrorCachingMinTTL: 0
+            ResponseCode: 200
+            ResponsePagePath: /index.html
 
   distributionAccessIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity

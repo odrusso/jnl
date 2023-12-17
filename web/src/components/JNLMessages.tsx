@@ -1,36 +1,29 @@
-import React from "react";
+import React, {useContext} from "react";
 import {randomColor} from "randomcolor";
-
-export type JNLMessage = {
-    date: string,
-    text: string
-};
+import {Message, MessagesContext} from "../contexts/MessagesContext";
 
 export const messageHash = (message: string): number => {
     // Returns an integer which can be used as a seed for a random color
     return message.split("").map((it) => it.charCodeAt(0)).reduce((acc, curr) => acc + curr)
 }
 
-export const getColorForMessage = (message: JNLMessage): string => {
+export const getColorForMessage = (message: Message): string => {
     return randomColor({seed: messageHash(message.text), luminosity: "dark"})
 }
 
-type JNLMessageProps = {
-    messages: JNLMessage[],
-    removeMessage: (number) => void
-}
+export const JNLMessages = (): JSX.Element => {
+    const messagesContext = useContext(MessagesContext)
 
-export const JNLMessages = ({messages, removeMessage}: JNLMessageProps): JSX.Element => {
     return (
         <div className={"mt-5"} data-testid={"messages-container"}>
-            {messages.slice().reverse().map((it, idx) =>
-                <div className={"block p-5 mb-3"} key={idx}>
+            {(messagesContext?.messages ?? []).slice().reverse().map((message, index) =>
+                <div className={"block p-5 mb-3"} key={index}>
                     <p className={"blockDate mb-2"}
-                       style={{color: getColorForMessage(it)}}>{it.date}</p>
+                       style={{color: getColorForMessage(message)}}>{message.date}</p>
                     <i className={"blockRemove"}
-                       onClick={() => removeMessage(messages.length - 1 - idx)}>remove </i>
+                       onClick={() => messagesContext!.removeMessage(message)}>remove </i>
                     <p className={"blockText mb-0"}>
-                        {it.text.split('\n').map((line, idx) => <span key={idx}>{line}<br/></span>)}
+                        {message.text.split('\n').map((line, idx) => <span key={idx}>{line}<br/></span>)}
                     </p>
                 </div>
             )}

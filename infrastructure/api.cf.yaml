@@ -12,6 +12,8 @@ Parameters:
   environment:
     Type: String
     Default: stage
+  signingSecretString:
+    Type: String
 
 Resources:
   apiGatewayV2:
@@ -75,6 +77,8 @@ Resources:
       Environment:
         Variables:
           dynamoTableName: !Ref messagesDynamoTable
+          signingSecret: !Ref signingSecretString
+          apiDomain: !Ref apiDomain
 
   lambdaApiGatewayInvoke:
     Type: AWS::Lambda::Permission

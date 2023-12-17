@@ -50,6 +50,7 @@ module.exports = {
         static: {
             directory: './build',
         },
+        historyApiFallback: true,
     },
     plugins: [
         new HtmlWebPackPlugin({

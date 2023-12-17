@@ -1,55 +1,50 @@
-import React, {useEffect, useState} from "react";
-import {JNLFetch} from "./JNLFetch";
-import {JNLMessage} from "./JNLMessages";
+import React, {useContext, useState} from "react";
+import {Button, CircularProgress} from "@mui/material";
+import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../contexts/AuthContext";
+import {MessagesContext} from "../contexts/MessagesContext";
 
-type JNLHeaderProps = {
-    messages: JNLMessage[],
-    updateLocalStorage: (messages: JNLMessage[]) => void
-}
+export const JNLHeader = (): JSX.Element => {
+    const navigate = useNavigate();
+    const authContext = useContext(AuthContext);
+    const [loginDisabled, setLoginDisabled] = useState(false);
+    const logoutApiUrl = process.env.API_URL! + "logout";
+    const messagesContext = useContext(MessagesContext)
 
-export const JNLHeader = ({messages, updateLocalStorage}: JNLHeaderProps): JSX.Element => {
-    const [fetchOpen, setFetchOpen] = useState(false)
-    const [fetchType, setFetchType] = useState<"POST" | "PUT">("POST")
-
-    // Only run on initial render of this component
-    useEffect(() => {
-        document.addEventListener('keydown', (event) => {
-            if (event.code === 'Escape') {
-                setFetchOpen(false)
-            }
-        })
-    }, [])
+    const logout = async () => {
+        setLoginDisabled(true)
+        try {
+            await fetch(
+                logoutApiUrl,
+                {
+                    method: 'post',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {'Content-Type': 'application/json'}
+                }
+            )
+        } catch (e) {
+            console.error(e)
+        }
+        authContext!.logout();
+        messagesContext!.clearLocalMessages();
+        setLoginDisabled(false)
+    }
 
     return (
-        <div className="header
-                        mt-3
-                        d-flex justify-content-center justify-content-md-end">
-
-            <JNLFetch
-                fetchOpen={fetchOpen}
-                setFetchOpen={setFetchOpen}
-                fetchType={fetchType}
-                messages={messages}
-                updateLocalStorage={updateLocalStorage}
-            />
-
-            <a href={"#"}
-               onClick={() => {
-                   setFetchOpen(true);
-                   setFetchType("POST")
-               }}>
-                fetch
-            </a>
-
-            <a>|</a>
-
-            <a href={"#"}
-               onClick={() => {
-                   setFetchOpen(true);
-                   setFetchType("PUT")
-               }}>
-                put
-            </a>
+        <div className="header mt-3 d-flex justify-content-center justify-content-md-end">
+            {messagesContext?.loading && (<CircularProgress />)}
+            {authContext?.username && (
+                <>
+                    <Button disabled={loginDisabled} onClick={logout}>logout</Button>
+                </>
+            )}
+            {!authContext?.username && (
+                <>
+                    <Button onClick={() => navigate("/login")}>login</Button>
+                    <Button onClick={() => navigate("/register")}>register</Button>
+                </>
+            )}
         </div>
     );
 }

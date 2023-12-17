@@ -3,6 +3,10 @@ import {fireEvent, render, screen} from '@testing-library/react'
 import "@testing-library/jest-dom/extend-expect"
 import {axe} from 'jest-axe';
 import {App} from "./App";
+import {HashRouter} from "react-router-dom";
+import {CookiesProvider} from "react-cookie";
+import {AuthProvider} from "./contexts/AuthContext";
+import {MessagesProvider} from "./contexts/MessagesContext";
 
 // eslint-disable-next-line no-undef
 beforeEach(() => {
@@ -11,14 +15,13 @@ beforeEach(() => {
 
 describe("Application tests", () => {
     test("is accessible", async () => {
-        const { container } = render(<App/>)
+        const { container } = renderApp()
         expect(await axe(container)).toHaveNoViolations()
     })
 
     test("can write a message", async () => {
-        render(<App/>)
-
-        const entryField = await screen.findByTestId("entry-message")
+        renderApp()
+        const entryField: HTMLTextAreaElement = screen.getByTestId("entry-message").querySelector("textarea")!;
         fireEvent.change(entryField, {target: {value: "Some text!"}})
         fireEvent.click(screen.getByTestId("submit-message"))
 
@@ -28,16 +31,16 @@ describe("Application tests", () => {
 
     test("loads messages out of local storage", async () => {
         localStorage.setItem("messages", JSON.stringify([{text: "Some text!", date: "Some date!"}]))
-        render(<App/>)
+
+        renderApp()
 
         expect(await screen.findByText("Some text!")).toBeInTheDocument()
         expect(await screen.findByText("Some date!")).toBeInTheDocument()
     })
 
     test("stores messages into of local storage", async () => {
-        render(<App/>)
-
-        const entryField = await screen.findByTestId("entry-message")
+        renderApp()
+        const entryField: HTMLTextAreaElement = screen.getByTestId("entry-message").querySelector("textarea")!;
         fireEvent.change(entryField, {target: {value: "Some text!"}})
         fireEvent.click(screen.getByTestId("submit-message"))
 
@@ -49,9 +52,8 @@ describe("Application tests", () => {
     })
 
     test("can remove a message", async () => {
-        render(<App/>)
-
-        const entryField = await screen.findByTestId("entry-message")
+        renderApp()
+        const entryField: HTMLTextAreaElement = screen.getByTestId("entry-message").querySelector("textarea")!;
         fireEvent.change(entryField, {target: {value: "Some text!"}})
         fireEvent.click(screen.getByTestId("submit-message"))
 
@@ -60,3 +62,17 @@ describe("Application tests", () => {
         expect(screen.queryByText("Some text!")).not.toBeInTheDocument()
     })
 })
+
+const renderApp = () => {
+    return render(
+        <CookiesProvider>
+            <AuthProvider>
+                <MessagesProvider>
+                    <HashRouter>
+                        <App/>
+                    </HashRouter>
+                </MessagesProvider>
+            </AuthProvider>
+        </CookiesProvider>
+    )
+}

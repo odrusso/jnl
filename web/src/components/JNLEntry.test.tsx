@@ -2,31 +2,45 @@ import React from "react";
 import {JNLEntry} from "./JNLEntry";
 import {fireEvent, render, screen} from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect"
+import {MessagesContext} from "../contexts/MessagesContext";
 
 describe("Entry area tests", () => {
+
+    const renderPage = (mockAddMessage= jest.fn()) => render(
+        <MessagesContext.Provider value={{
+            messages: [],
+            addMessage: mockAddMessage,
+            removeMessage: jest.fn(),
+            loading: false,
+            clearLocalMessages: jest.fn()
+        }}>
+            <JNLEntry/>
+        </MessagesContext.Provider>)
+
     test("renders expected components", async () => {
-        render(<JNLEntry addMessage={jest.fn()}/>)
+        renderPage()
+
         const submitButton = await screen.findByTestId("submit-message")
         expect(submitButton.tagName).toBe("svg")
 
-        const entryField = screen.getByTestId("entry-message")
+        const entryField: HTMLTextAreaElement = screen.getByTestId("entry-message").querySelector("textarea")!;
         expect(entryField.tagName).toBe("TEXTAREA")
         expect(entryField).toHaveValue("")
     })
 
     test("can type into test area", async () => {
-        render(<JNLEntry addMessage={jest.fn()}/>)
+        renderPage()
 
-        const entryField = screen.getByTestId("entry-message")
+        const entryField: HTMLTextAreaElement = screen.getByTestId("entry-message").querySelector("textarea")!;
         fireEvent.change(entryField, {target: {value: "Some text!"}})
         expect(entryField).toHaveValue("Some text!")
     })
 
     test("submitting text calls addMessage with the current value", async () => {
         const mockAddMessage = jest.fn()
-        render(<JNLEntry addMessage={mockAddMessage}/>)
+        renderPage(mockAddMessage)
 
-        const entryField = screen.getByTestId("entry-message")
+        const entryField: HTMLTextAreaElement = screen.getByTestId("entry-message").querySelector("textarea")!;
         fireEvent.change(entryField, {target: {value: "Some text!"}})
         fireEvent.click(screen.getByTestId("submit-message"))
 
@@ -37,9 +51,9 @@ describe("Entry area tests", () => {
 
     test("submitting text resets text in field", async () => {
         const mockAddMessage = jest.fn()
-        render(<JNLEntry addMessage={mockAddMessage}/>)
+        renderPage(mockAddMessage)
 
-        const entryField = screen.getByTestId("entry-message")
+        const entryField: HTMLTextAreaElement = screen.getByTestId("entry-message").querySelector("textarea")!;
         fireEvent.change(entryField, {target: {value: "Some text!"}})
         fireEvent.click(screen.getByTestId("submit-message"))
         expect(entryField).toHaveValue("")
