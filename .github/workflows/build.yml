@@ -1,11 +1,15 @@
-name: Build, test, and deploy to Stage
-on: [ pull_request ]
+name: Build, test, and deploy
+on:
+  push:
+    branches:
+      - master
+      - 'stage/**'
 jobs:
   api:
     runs-on: ubuntu-latest
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.STAGE_AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGE_AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ github.ref == 'ref/head/master' && secrets.PROD_AWS_ACCESS_KEY_ID || secrets.STAGE_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ github.ref == 'ref/head/master' && secrets.PROD_AWS_SECRET_ACCESS_KEY || secrets.STAGE_AWS_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v2
 
@@ -24,19 +28,19 @@ jobs:
           zip -r ./deployment.zip .
           
           # Push to S3
-          aws s3 cp deployment.zip s3://${{ secrets.STAGE_S3_CODE_BUCKET }}/deployment.zip
+          aws s3 cp deployment.zip s3://${{ github.ref == 'ref/head/master' && secrets.PROD_S3_CODE_BUCKET || secrets.STAGE_S3_CODE_BUCKET }}/deployment.zip
           
           # Get version form bucket
           NEW_VERSION=$( \
             aws s3api list-object-versions \
-              --bucket ${{ secrets.STAGE_S3_CODE_BUCKET }} \
+              --bucket ${{ github.ref == 'ref/head/master' && secrets.PROD_S3_CODE_BUCKET || secrets.STAGE_S3_CODE_BUCKET }} \
               --prefix deployment.zip \
               --query 'Versions[?IsLatest].[VersionId]' \
               --output text)
 
           # Update CF with new version
           aws cloudformation update-stack \
-            --stack-name ${{ secrets.STAGE_API_CF_NAME }} \
+            --stack-name ${{ github.ref == 'ref/head/master' && secrets.PROD_API_CF_NAME || secrets.STAGE_API_CF_NAME }} \
             --use-previous-template \
             --capabilities CAPABILITY_IAM \
             --parameters \
@@ -48,15 +52,15 @@ jobs:
               ParameterKey=signingSecretString,UsePreviousValue=true
 
           # Wait for update
-          aws cloudformation wait stack-update-complete --stack-name ${{ secrets.STAGE_API_CF_NAME }}
+          aws cloudformation wait stack-update-complete --stack-name ${{ github.ref == 'ref/head/master' && secrets.PROD_API_CF_NAME || secrets.STAGE_API_CF_NAME }} 
 
         env:
-          AWS_DEFAULT_REGION: us-east-1
+          AWS_DEFAULT_REGION: ${{ github.ref == 'ref/head/master' && 'ap-southeast-2' || 'us-east-1' }}
   spa:
     runs-on: ubuntu-latest
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.STAGE_AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGE_AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ github.ref == 'ref/head/master' && secrets.PROD_AWS_ACCESS_KEY_ID || secrets.STAGE_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ github.ref == 'ref/head/master' && secrets.PROD_AWS_SECRET_ACCESS_KEY || secrets.STAGE_AWS_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v2
 
@@ -81,7 +85,7 @@ jobs:
         uses: reggionick/s3-deploy@v3
         with:
           folder: ./web/build
-          bucket: ${{ secrets.STAGE_S3_BUCKET }}
-          bucket-region: us-east-1
-          dist-id: ${{ secrets.STAGE_CF_DISTRIBUTION_ID }}
+          bucket: ${{ github.ref == 'ref/head/master' &&  secrets.PROD_S3_BUCKET || secrets.STAGE_S3_BUCKET }}
+          bucket-region: ${{ github.ref == 'ref/head/master' && 'ap-southeast-2' || 'us-east-1' }}
+          dist-id: ${{ github.ref == 'ref/head/master' && secrets.PROD_CF_DISTRIBUTION_ID || secrets.STAGE_CF_DISTRIBUTION_ID }}
           invalidation: /*
