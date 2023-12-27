@@ -6,4 +6,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket for Docker in Docker
     ports:
-      - "3000:3000"
+      - "3001:3000"
+  web:
+    build:
+      context: ./web/
+    ports:
+      - "3000:8080"

@@ -1,10 +1,10 @@
 # Use an official Python runtime as a parent image
-FROM python:3.12
+FROM python:3.12-slim
 
 # Install AWS SAM CLI
 RUN pip install aws-sam-cli
 
-# Copy the current directory contents into the container at /app
+# Copy the current directory contents into the container
 COPY . .
 
 # Install any needed packages specified in requirements.txt
