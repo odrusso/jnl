@@ -4,3 +4,4 @@
 /app/package/
 /app/__pycache__/
 /web/dist
+/app/.aws-sam/

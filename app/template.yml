@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: sam-app
+
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Resources:
+  LocalApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_function.main
+      Runtime: python3.9
+      # Routes all traffic to the single handler, similar to prod API Gateway setup
+      Events:
+        http:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
