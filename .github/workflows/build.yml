@@ -20,7 +20,7 @@ jobs:
 
       - name: Build and Deploy Backend
         working-directory: ./app
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/stage')
         run: |
           # Bundle all files 
           zip -r ./deployment.zip .
@@ -81,7 +81,7 @@ jobs:
 
       - name: Deploy Frontend
         uses: reggionick/s3-deploy@v3
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/stage')
         with:
           folder: ./web/build
           bucket: ${{ github.ref == 'ref/head/master' &&  secrets.PROD_S3_BUCKET || secrets.STAGE_S3_BUCKET }}
