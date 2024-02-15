@@ -11,7 +11,7 @@ window.fetch = require("node-fetch")
 
 // eslint-disable-next-line no-undef
 beforeAll(() => {
-    process.env.API_URL = "https://api.jnlapp.io/messages"
+    process.env.API_URL = "https://api.jur.onl/messages"
     // Enable the mocking in tests.
     server.listen()
 })
