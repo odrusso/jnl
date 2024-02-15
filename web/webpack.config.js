@@ -32,7 +32,7 @@ module.exports = {
             },
             {
                 test: /\.ttf$/,
-                loader: 'file-loader',
+                loader: 'url-loader',
                 options: {
                     name: '[name].[ext]',
                     outputPath: 'fonts/'
