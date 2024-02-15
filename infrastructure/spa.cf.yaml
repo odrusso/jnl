@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Parameters:
   domainName:
     Type: String
-    Default: stage.jnlapp.io
+    Default: stage.jur.onl
   hostedZoneId:
     Type: AWS::Route53::HostedZone::Id
   environment:

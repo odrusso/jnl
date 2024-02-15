@@ -1,7 +1,7 @@
 ![Test and Deploy](https://github.com/odrusso/jnl/workflows/Deploy%20JNL%20to%20S3%20for%20static%20hosting/badge.svg)  
 ![jnl-readme-header](https://user-images.githubusercontent.com/15084674/129442900-24daa50f-79b3-491d-860b-de35b7885e36.png)
 
-## https://jnlapp.io/
+## https://jur.onl/
 Pragmatic journaling webapp. No servers, no analytics, no tracking.  
 
 ![Screen Shot 2021-08-14 at 10 07 58 PM](https://user-images.githubusercontent.com/15084674/129442607-8915c1f1-32e4-4a9a-9a5a-ccf3eaf96ed1.png)

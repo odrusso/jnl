@@ -4,9 +4,9 @@
   "description": "Pragmatic journelling webapp",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env API_URL=https://api.stage.jnlapp.io/ webpack serve --mode=development --open --hot",
-    "build-prod": "cross-env API_URL=https://api.app.jnlapp.io/ webpack --mode=production",
-    "build-stage": "cross-env API_URL=https://api.stage.jnlapp.io/ webpack --mode=production",
+    "start": "cross-env API_URL=https://api.stage.jur.onl/ webpack serve --mode=development --open --hot",
+    "build-prod": "cross-env API_URL=https://api.app.jur.onl/ webpack --mode=production",
+    "build-stage": "cross-env API_URL=https://api.stage.jur.onl/ webpack --mode=production",
     "test": "jest"
   },
   "repository": {

@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Parameters:
   DomainName:
     Type: String
-    Default: jnlapp.io
+    Default: jur.onl
 
 Resources:
   HostedZone:
